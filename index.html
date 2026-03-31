@@ -1,0 +1,398 @@
+import React, { useMemo, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ChevronRight, PhoneCall, Search, RotateCcw } from "lucide-react";
+
+const ivrData = {
+  id: "root",
+  label: "Welcome Message",
+  prompt:
+    "Welcome to Alpha Services. For faster service, please choose from the following options.",
+  type: "greeting",
+  children: [
+    {
+      id: "arabic",
+      digit: "1",
+      label: "Arabic",
+      prompt: "For Arabic, press 1.",
+      type: "menu",
+      children: [
+        {
+          id: "ar-individual",
+          digit: "1",
+          label: "Individual Services",
+          prompt: "For individual services, press 1.",
+          type: "menu",
+          children: [
+            {
+              id: "ar-balance",
+              digit: "1",
+              label: "Check Balance",
+              prompt: "To check your balance, press 1.",
+              type: "route",
+              target: "Self-Service API / Balance Lookup",
+              hours: "24/7",
+            },
+            {
+              id: "ar-payments",
+              digit: "2",
+              label: "Recent Payments",
+              prompt: "For recent payments, press 2.",
+              type: "route",
+              target: "Billing Information Service",
+              hours: "24/7",
+            },
+            {
+              id: "ar-agent-individual",
+              digit: "3",
+              label: "Speak to an Agent",
+              prompt: "To speak with an agent, press 3.",
+              type: "route",
+              target: "Retail Support Queue",
+              hours: "Sun-Thu 8:00-22:00",
+            },
+          ],
+        },
+        {
+          id: "ar-business",
+          digit: "2",
+          label: "Business Services",
+          prompt: "For business services, press 2.",
+          type: "menu",
+          children: [
+            {
+              id: "ar-orders",
+              digit: "1",
+              label: "Orders and Provisioning",
+              prompt: "For orders and provisioning, press 1.",
+              type: "route",
+              target: "Enterprise Provisioning Team",
+              hours: "Sun-Thu 8:00-17:00",
+            },
+            {
+              id: "ar-account-manager",
+              digit: "2",
+              label: "Account Manager",
+              prompt: "To reach your account manager, press 2.",
+              type: "route",
+              target: "Account Management Queue",
+              hours: "Sun-Thu 8:00-17:00",
+            },
+            {
+              id: "ar-technical-business",
+              digit: "3",
+              label: "Technical Support",
+              prompt: "For business technical support, press 3.",
+              type: "menu",
+              children: [
+                {
+                  id: "ar-p1",
+                  digit: "1",
+                  label: "Critical Incident",
+                  prompt: "For critical incident, press 1.",
+                  type: "route",
+                  target: "Priority Incident Queue",
+                  hours: "24/7",
+                },
+                {
+                  id: "ar-standard-ticket",
+                  digit: "2",
+                  label: "Open Support Ticket",
+                  prompt: "To open a support ticket, press 2.",
+                  type: "route",
+                  target: "Business Helpdesk",
+                  hours: "24/7",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: "ar-complaints",
+          digit: "3",
+          label: "Complaints",
+          prompt: "For complaints, press 3.",
+          type: "menu",
+          children: [
+            {
+              id: "ar-existing-complaint",
+              digit: "1",
+              label: "Existing Complaint",
+              prompt: "For an existing complaint, press 1.",
+              type: "route",
+              target: "Complaint Follow-up Team",
+              hours: "Sun-Thu 8:00-20:00",
+            },
+            {
+              id: "ar-new-complaint",
+              digit: "2",
+              label: "New Complaint",
+              prompt: "To register a new complaint, press 2.",
+              type: "route",
+              target: "Complaint Registration Queue",
+              hours: "Sun-Thu 8:00-20:00",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "english",
+      digit: "2",
+      label: "English",
+      prompt: "For English, press 2.",
+      type: "menu",
+      children: [
+        {
+          id: "en-sales",
+          digit: "1",
+          label: "Sales",
+          prompt: "For sales, press 1.",
+          type: "route",
+          target: "Sales Queue",
+          hours: "Sun-Thu 9:00-18:00",
+        },
+        {
+          id: "en-support",
+          digit: "2",
+          label: "Support",
+          prompt: "For support, press 2.",
+          type: "menu",
+          children: [
+            {
+              id: "en-technical",
+              digit: "1",
+              label: "Technical Support",
+              prompt: "For technical support, press 1.",
+              type: "route",
+              target: "Technical Support Queue",
+              hours: "24/7",
+            },
+            {
+              id: "en-billing",
+              digit: "2",
+              label: "Billing",
+              prompt: "For billing, press 2.",
+              type: "route",
+              target: "Billing Queue",
+              hours: "24/7",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "self-service",
+      digit: "8",
+      label: "Digital Self-Service",
+      prompt: "For SMS link to self-service options, press 8.",
+      type: "route",
+      target: "SMS Gateway / Self-Service Portal",
+      hours: "24/7",
+    },
+    {
+      id: "operator",
+      digit: "0",
+      label: "General Operator",
+      prompt: "To speak with the operator, press 0.",
+      type: "route",
+      target: "Front Desk / Reception",
+      hours: "24/7",
+    },
+  ],
+};
+
+function flattenTree(node, trail = []) {
+  const currentTrail = [...trail, node.label];
+  const base = [{ ...node, trail: currentTrail.join(" → ") }];
+  if (!node.children) return base;
+  return base.concat(...node.children.map((child) => flattenTree(child, currentTrail)));
+}
+
+function TreeNode({ node, level = 0, selectedId, onSelect }) {
+  const hasChildren = !!node.children?.length;
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={() => onSelect(node)}
+        className={`w-full text-left rounded-2xl border p-3 transition shadow-sm hover:shadow ${
+          selectedId === node.id ? "border-black bg-black text-white" : "bg-white"
+        }`}
+        style={{ marginInlineStart: `${level * 20}px` }}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              {node.digit !== undefined && <Badge variant="secondary">{node.digit}</Badge>}
+              <span className="font-medium">{node.label}</span>
+              <Badge variant="outline">{node.type}</Badge>
+            </div>
+            <p className={`text-sm mt-1 ${selectedId === node.id ? "text-white/80" : "text-slate-500"}`}>
+              {node.prompt}
+            </p>
+          </div>
+          {hasChildren && <ChevronRight className="h-4 w-4 shrink-0" />}
+        </div>
+      </button>
+
+      {hasChildren && (
+        <div className="space-y-2">
+          {node.children.map((child) => (
+            <TreeNode
+              key={child.id}
+              node={child}
+              level={level + 1}
+              selectedId={selectedId}
+              onSelect={onSelect}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function IVRCallFlowViewer() {
+  const allNodes = useMemo(() => flattenTree(ivrData), []);
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState(ivrData);
+
+  const results = useMemo(() => {
+    if (!query.trim()) return allNodes;
+    const q = query.toLowerCase();
+    return allNodes.filter(
+      (n) =>
+        n.label?.toLowerCase().includes(q) ||
+        n.prompt?.toLowerCase().includes(q) ||
+        n.target?.toLowerCase().includes(q) ||
+        n.trail?.toLowerCase().includes(q)
+    );
+  }, [allNodes, query]);
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="grid gap-4 md:grid-cols-[1.2fr_.8fr] items-start">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight">Company IVR Call Flow</h1>
+            <p className="text-slate-600 mt-2">
+              Demo version with realistic branching for language, customer type, support, complaints, and self-service.
+            </p>
+          </div>
+          <Card className="rounded-2xl shadow-sm">
+            <CardContent className="p-4 flex items-center gap-3 justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Total nodes</p>
+                <p className="text-2xl font-semibold">{allNodes.length}</p>
+              </div>
+              <PhoneCall className="h-8 w-8" />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
+          <Card className="rounded-2xl shadow-sm">
+            <CardHeader>
+              <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+                <CardTitle>Call Flow Tree</CardTitle>
+                <div className="flex gap-2">
+                  <div className="relative w-full md:w-80">
+                    <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <Input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search prompt, service, queue..."
+                      className="ps-9 rounded-xl"
+                    />
+                  </div>
+                  <Button variant="outline" className="rounded-xl" onClick={() => { setQuery(""); setSelected(ivrData); }}>
+                    <RotateCcw className="h-4 w-4 me-2" /> Reset
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {!query.trim() ? (
+                <TreeNode node={ivrData} selectedId={selected.id} onSelect={setSelected} />
+              ) : (
+                <div className="space-y-2">
+                  {results.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setSelected(item)}
+                      className={`w-full text-left rounded-2xl border p-3 hover:shadow-sm ${selected.id === item.id ? "border-black bg-black text-white" : "bg-white"}`}
+                    >
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {item.digit !== undefined && <Badge variant="secondary">{item.digit}</Badge>}
+                        <span className="font-medium">{item.label}</span>
+                        <Badge variant="outline">{item.type}</Badge>
+                      </div>
+                      <p className={`text-sm mt-1 ${selected.id === item.id ? "text-white/80" : "text-slate-500"}`}>{item.trail}</p>
+                    </button>
+                  ))}
+                  {!results.length && <p className="text-sm text-slate-500">No matching results.</p>}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl shadow-sm sticky top-6">
+            <CardHeader>
+              <CardTitle>Selected Node</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <p className="text-sm text-slate-500">Label</p>
+                <p className="text-lg font-semibold">{selected.label}</p>
+              </div>
+              {selected.digit !== undefined && (
+                <div>
+                  <p className="text-sm text-slate-500">Digit</p>
+                  <p className="font-medium">{selected.digit}</p>
+                </div>
+              )}
+              <div>
+                <p className="text-sm text-slate-500">Prompt</p>
+                <p className="font-medium">{selected.prompt || "—"}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500">Path</p>
+                <p className="font-medium">{selected.trail || selected.label}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500">Type</p>
+                <p className="font-medium">{selected.type}</p>
+              </div>
+              {selected.target && (
+                <div>
+                  <p className="text-sm text-slate-500">Route Target</p>
+                  <p className="font-medium">{selected.target}</p>
+                </div>
+              )}
+              {selected.hours && (
+                <div>
+                  <p className="text-sm text-slate-500">Hours</p>
+                  <p className="font-medium">{selected.hours}</p>
+                </div>
+              )}
+              {selected.children?.length ? (
+                <div>
+                  <p className="text-sm text-slate-500 mb-2">Next Options</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selected.children.map((child) => (
+                      <Button key={child.id} variant="outline" className="rounded-xl" onClick={() => setSelected({ ...child, trail: `${selected.trail || selected.label} → ${child.label}` })}>
+                        {child.digit ?? "-"} · {child.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
