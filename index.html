@@ -1,398 +1,797 @@
-import React, { useMemo, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ChevronRight, PhoneCall, Search, RotateCcw } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IVR Flow Diagram</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #cbd5e1;
+      --accent: #111827;
+      --accent-2: #2563eb;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
 
-const ivrData = {
-  id: "root",
-  label: "Welcome Message",
-  prompt:
-    "Welcome to Alpha Services. For faster service, please choose from the following options.",
-  type: "greeting",
-  children: [
-    {
-      id: "arabic",
-      digit: "1",
-      label: "Arabic",
-      prompt: "For Arabic, press 1.",
-      type: "menu",
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff, #eef4ff);
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .toolbar input {
+      flex: 1;
+      min-width: 260px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      outline: none;
+      background: white;
+    }
+
+    .toolbar button {
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 14px 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .toolbar button.secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid #d1d5db;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .summary-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid #e5e7eb;
+    }
+
+    .summary-card .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .summary-card .value {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.4fr 0.6fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .diagram-wrap, .details {
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid #e5e7eb;
+    }
+
+    .diagram-header, .details-header {
+      padding: 20px 20px 0;
+    }
+
+    .diagram-header h2, .details-header h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .diagram-header p, .details-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .diagram {
+      overflow: auto;
+      padding: 20px 20px 28px;
+    }
+
+    .tree {
+      display: flex;
+      justify-content: center;
+      min-width: 1100px;
+      padding: 10px 0 20px;
+    }
+
+    .tree ul {
+      position: relative;
+      padding-top: 24px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .tree li {
+      list-style: none;
+      text-align: center;
+      position: relative;
+      padding: 24px 14px 0 14px;
+    }
+
+    .tree li::before,
+    .tree li::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 50%;
+      border-top: 2px solid var(--line);
+      width: 50%;
+      height: 24px;
+    }
+
+    .tree li::after {
+      right: auto;
+      left: 50%;
+      border-left: 2px solid var(--line);
+    }
+
+    .tree li:only-child::before,
+    .tree li:only-child::after {
+      display: none;
+    }
+
+    .tree li:only-child {
+      padding-top: 0;
+    }
+
+    .tree li:first-child::before,
+    .tree li:last-child::after {
+      border: 0;
+    }
+
+    .tree li:last-child::before {
+      border-right: 2px solid var(--line);
+      border-radius: 0 12px 0 0;
+    }
+
+    .tree li:first-child::after {
+      border-radius: 12px 0 0 0;
+    }
+
+    .tree ul ul::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      border-left: 2px solid var(--line);
+      width: 0;
+      height: 24px;
+    }
+
+    .node {
+      width: 220px;
+      background: white;
+      border: 1px solid #dbe3f0;
+      border-radius: var(--radius);
+      padding: 14px;
+      display: inline-block;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+      cursor: pointer;
+      transition: 0.2s ease;
+      text-align: left;
+    }
+
+    .node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+    }
+
+    .node.active {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .node .top {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: #eff6ff;
+      color: var(--accent-2);
+      font-weight: bold;
+    }
+
+    .type {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #374151;
+      font-size: 12px;
+    }
+
+    .node h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .node p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .node .target {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #0f172a;
+      font-weight: bold;
+    }
+
+    .details {
+      position: sticky;
+      top: 20px;
+    }
+
+    .details-body {
+      padding: 20px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .field:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .field .name {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .field .content {
+      font-size: 15px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .mini-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-btn {
+      border: 1px solid #d1d5db;
+      background: white;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .hidden-node {
+      display: none !important;
+    }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .details {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <h1>IVR Call Flow Diagram</h1>
+      <p>
+        Demo HTML version that works directly on GitHub Pages. You can later replace the sample data with your real IVR.
+      </p>
+      <div class="toolbar">
+        <input id="searchInput" type="text" placeholder="Search service, queue, path, prompt..." />
+        <button id="expandBtn" class="secondary">Expand All</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-card">
+        <div class="label">Total nodes</div>
+        <div class="value" id="totalNodes">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Menus</div>
+        <div class="value" id="menuNodes">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Final routes</div>
+        <div class="value" id="routeNodes">0</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Languages</div>
+        <div class="value">2</div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="diagram-wrap">
+        <div class="diagram-header">
+          <h2>Flow Diagram</h2>
+          <p>Click any box to view its details.</p>
+        </div>
+        <div class="diagram">
+          <div class="tree" id="treeRoot"></div>
+        </div>
+      </div>
+
+      <div class="details">
+        <div class="details-header">
+          <h2>Node Details</h2>
+          <p>Information about the selected branch.</p>
+        </div>
+        <div class="details-body" id="detailsPanel"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ivrData = {
+      id: "root",
+      label: "Welcome Message",
+      prompt: "Welcome to Alpha Services. For Arabic press 1, for English press 2, for self-service press 8, or press 0 for operator.",
+      type: "greeting",
+      hours: "24/7",
       children: [
         {
-          id: "ar-individual",
+          id: "ar",
           digit: "1",
-          label: "Individual Services",
-          prompt: "For individual services, press 1.",
+          label: "Arabic",
+          prompt: "For Arabic, press 1.",
           type: "menu",
           children: [
             {
-              id: "ar-balance",
+              id: "ar-individual",
               digit: "1",
-              label: "Check Balance",
-              prompt: "To check your balance, press 1.",
-              type: "route",
-              target: "Self-Service API / Balance Lookup",
-              hours: "24/7",
-            },
-            {
-              id: "ar-payments",
-              digit: "2",
-              label: "Recent Payments",
-              prompt: "For recent payments, press 2.",
-              type: "route",
-              target: "Billing Information Service",
-              hours: "24/7",
-            },
-            {
-              id: "ar-agent-individual",
-              digit: "3",
-              label: "Speak to an Agent",
-              prompt: "To speak with an agent, press 3.",
-              type: "route",
-              target: "Retail Support Queue",
-              hours: "Sun-Thu 8:00-22:00",
-            },
-          ],
-        },
-        {
-          id: "ar-business",
-          digit: "2",
-          label: "Business Services",
-          prompt: "For business services, press 2.",
-          type: "menu",
-          children: [
-            {
-              id: "ar-orders",
-              digit: "1",
-              label: "Orders and Provisioning",
-              prompt: "For orders and provisioning, press 1.",
-              type: "route",
-              target: "Enterprise Provisioning Team",
-              hours: "Sun-Thu 8:00-17:00",
-            },
-            {
-              id: "ar-account-manager",
-              digit: "2",
-              label: "Account Manager",
-              prompt: "To reach your account manager, press 2.",
-              type: "route",
-              target: "Account Management Queue",
-              hours: "Sun-Thu 8:00-17:00",
-            },
-            {
-              id: "ar-technical-business",
-              digit: "3",
-              label: "Technical Support",
-              prompt: "For business technical support, press 3.",
+              label: "Individual Services",
+              prompt: "For individual services, press 1.",
               type: "menu",
               children: [
                 {
-                  id: "ar-p1",
+                  id: "ar-balance",
                   digit: "1",
-                  label: "Critical Incident",
-                  prompt: "For critical incident, press 1.",
+                  label: "Check Balance",
+                  prompt: "To check your balance, press 1.",
                   type: "route",
-                  target: "Priority Incident Queue",
-                  hours: "24/7",
+                  target: "Self-Service API / Balance Lookup",
+                  hours: "24/7"
                 },
                 {
-                  id: "ar-standard-ticket",
+                  id: "ar-payments",
                   digit: "2",
-                  label: "Open Support Ticket",
-                  prompt: "To open a support ticket, press 2.",
+                  label: "Recent Payments",
+                  prompt: "For recent payments, press 2.",
                   type: "route",
-                  target: "Business Helpdesk",
-                  hours: "24/7",
+                  target: "Billing Information Service",
+                  hours: "24/7"
                 },
-              ],
-            },
-          ],
-        },
-        {
-          id: "ar-complaints",
-          digit: "3",
-          label: "Complaints",
-          prompt: "For complaints, press 3.",
-          type: "menu",
-          children: [
-            {
-              id: "ar-existing-complaint",
-              digit: "1",
-              label: "Existing Complaint",
-              prompt: "For an existing complaint, press 1.",
-              type: "route",
-              target: "Complaint Follow-up Team",
-              hours: "Sun-Thu 8:00-20:00",
+                {
+                  id: "ar-agent",
+                  digit: "3",
+                  label: "Speak to an Agent",
+                  prompt: "To speak to an agent, press 3.",
+                  type: "route",
+                  target: "Retail Support Queue",
+                  hours: "Sun-Thu 8:00-22:00"
+                }
+              ]
             },
             {
-              id: "ar-new-complaint",
+              id: "ar-business",
               digit: "2",
-              label: "New Complaint",
-              prompt: "To register a new complaint, press 2.",
-              type: "route",
-              target: "Complaint Registration Queue",
-              hours: "Sun-Thu 8:00-20:00",
+              label: "Business Services",
+              prompt: "For business services, press 2.",
+              type: "menu",
+              children: [
+                {
+                  id: "ar-orders",
+                  digit: "1",
+                  label: "Orders and Provisioning",
+                  prompt: "For orders and provisioning, press 1.",
+                  type: "route",
+                  target: "Enterprise Provisioning Team",
+                  hours: "Sun-Thu 8:00-17:00"
+                },
+                {
+                  id: "ar-account-manager",
+                  digit: "2",
+                  label: "Account Manager",
+                  prompt: "To reach your account manager, press 2.",
+                  type: "route",
+                  target: "Account Management Queue",
+                  hours: "Sun-Thu 8:00-17:00"
+                },
+                {
+                  id: "ar-tech",
+                  digit: "3",
+                  label: "Technical Support",
+                  prompt: "For technical support, press 3.",
+                  type: "menu",
+                  children: [
+                    {
+                      id: "ar-p1",
+                      digit: "1",
+                      label: "Critical Incident",
+                      prompt: "For critical incident, press 1.",
+                      type: "route",
+                      target: "Priority Incident Queue",
+                      hours: "24/7"
+                    },
+                    {
+                      id: "ar-ticket",
+                      digit: "2",
+                      label: "Open Support Ticket",
+                      prompt: "To open a support ticket, press 2.",
+                      type: "route",
+                      target: "Business Helpdesk",
+                      hours: "24/7"
+                    }
+                  ]
+                }
+              ]
             },
-          ],
+            {
+              id: "ar-complaints",
+              digit: "3",
+              label: "Complaints",
+              prompt: "For complaints, press 3.",
+              type: "menu",
+              children: [
+                {
+                  id: "ar-existing-complaint",
+                  digit: "1",
+                  label: "Existing Complaint",
+                  prompt: "For an existing complaint, press 1.",
+                  type: "route",
+                  target: "Complaint Follow-up Team",
+                  hours: "Sun-Thu 8:00-20:00"
+                },
+                {
+                  id: "ar-new-complaint",
+                  digit: "2",
+                  label: "New Complaint",
+                  prompt: "To register a new complaint, press 2.",
+                  type: "route",
+                  target: "Complaint Registration Queue",
+                  hours: "Sun-Thu 8:00-20:00"
+                }
+              ]
+            }
+          ]
         },
-      ],
-    },
-    {
-      id: "english",
-      digit: "2",
-      label: "English",
-      prompt: "For English, press 2.",
-      type: "menu",
-      children: [
         {
-          id: "en-sales",
-          digit: "1",
-          label: "Sales",
-          prompt: "For sales, press 1.",
-          type: "route",
-          target: "Sales Queue",
-          hours: "Sun-Thu 9:00-18:00",
-        },
-        {
-          id: "en-support",
+          id: "en",
           digit: "2",
-          label: "Support",
-          prompt: "For support, press 2.",
+          label: "English",
+          prompt: "For English, press 2.",
           type: "menu",
           children: [
             {
-              id: "en-technical",
+              id: "en-sales",
               digit: "1",
-              label: "Technical Support",
-              prompt: "For technical support, press 1.",
+              label: "Sales",
+              prompt: "For sales, press 1.",
               type: "route",
-              target: "Technical Support Queue",
-              hours: "24/7",
+              target: "Sales Queue",
+              hours: "Sun-Thu 9:00-18:00"
             },
             {
-              id: "en-billing",
+              id: "en-support",
               digit: "2",
-              label: "Billing",
-              prompt: "For billing, press 2.",
-              type: "route",
-              target: "Billing Queue",
-              hours: "24/7",
-            },
-          ],
+              label: "Support",
+              prompt: "For support, press 2.",
+              type: "menu",
+              children: [
+                {
+                  id: "en-technical",
+                  digit: "1",
+                  label: "Technical Support",
+                  prompt: "For technical support, press 1.",
+                  type: "route",
+                  target: "Technical Support Queue",
+                  hours: "24/7"
+                },
+                {
+                  id: "en-billing",
+                  digit: "2",
+                  label: "Billing",
+                  prompt: "For billing, press 2.",
+                  type: "route",
+                  target: "Billing Queue",
+                  hours: "24/7"
+                }
+              ]
+            }
+          ]
         },
-      ],
-    },
-    {
-      id: "self-service",
-      digit: "8",
-      label: "Digital Self-Service",
-      prompt: "For SMS link to self-service options, press 8.",
-      type: "route",
-      target: "SMS Gateway / Self-Service Portal",
-      hours: "24/7",
-    },
-    {
-      id: "operator",
-      digit: "0",
-      label: "General Operator",
-      prompt: "To speak with the operator, press 0.",
-      type: "route",
-      target: "Front Desk / Reception",
-      hours: "24/7",
-    },
-  ],
-};
+        {
+          id: "self-service",
+          digit: "8",
+          label: "Digital Self-Service",
+          prompt: "For SMS link to self-service options, press 8.",
+          type: "route",
+          target: "SMS Gateway / Self-Service Portal",
+          hours: "24/7"
+        },
+        {
+          id: "operator",
+          digit: "0",
+          label: "General Operator",
+          prompt: "To speak with the operator, press 0.",
+          type: "route",
+          target: "Front Desk / Reception",
+          hours: "24/7"
+        }
+      ]
+    };
 
-function flattenTree(node, trail = []) {
-  const currentTrail = [...trail, node.label];
-  const base = [{ ...node, trail: currentTrail.join(" → ") }];
-  if (!node.children) return base;
-  return base.concat(...node.children.map((child) => flattenTree(child, currentTrail)));
-}
+    const nodeMap = new Map();
+    let selectedId = ivrData.id;
 
-function TreeNode({ node, level = 0, selectedId, onSelect }) {
-  const hasChildren = !!node.children?.length;
-  return (
-    <div className="space-y-2">
-      <button
-        onClick={() => onSelect(node)}
-        className={`w-full text-left rounded-2xl border p-3 transition shadow-sm hover:shadow ${
-          selectedId === node.id ? "border-black bg-black text-white" : "bg-white"
-        }`}
-        style={{ marginInlineStart: `${level * 20}px` }}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              {node.digit !== undefined && <Badge variant="secondary">{node.digit}</Badge>}
-              <span className="font-medium">{node.label}</span>
-              <Badge variant="outline">{node.type}</Badge>
-            </div>
-            <p className={`text-sm mt-1 ${selectedId === node.id ? "text-white/80" : "text-slate-500"}`}>
-              {node.prompt}
-            </p>
-          </div>
-          {hasChildren && <ChevronRight className="h-4 w-4 shrink-0" />}
+    function flatten(node, path = []) {
+      const currentPath = [...path, node.label];
+      const items = [{ ...node, path: currentPath.join(' → ') }];
+      nodeMap.set(node.id, { ...node, path: currentPath.join(' → ') });
+      if (node.children) {
+        node.children.forEach(child => items.push(...flatten(child, currentPath)));
+      }
+      return items;
+    }
+
+    const allNodes = flatten(ivrData);
+
+    function buildTree(node) {
+      const li = document.createElement('li');
+      li.dataset.id = node.id;
+
+      const card = document.createElement('div');
+      card.className = 'node';
+      card.dataset.id = node.id;
+
+      const top = document.createElement('div');
+      top.className = 'top';
+
+      if (node.digit !== undefined) {
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = node.digit;
+        top.appendChild(badge);
+      }
+
+      const type = document.createElement('span');
+      type.className = 'type';
+      type.textContent = node.type;
+      top.appendChild(type);
+
+      const title = document.createElement('h3');
+      title.textContent = node.label;
+
+      const prompt = document.createElement('p');
+      prompt.textContent = node.prompt || '-';
+
+      card.appendChild(top);
+      card.appendChild(title);
+      card.appendChild(prompt);
+
+      if (node.target) {
+        const target = document.createElement('div');
+        target.className = 'target';
+        target.textContent = '→ ' + node.target;
+        card.appendChild(target);
+      }
+
+      card.addEventListener('click', () => selectNode(node.id));
+      li.appendChild(card);
+
+      if (node.children && node.children.length) {
+        const ul = document.createElement('ul');
+        node.children.forEach(child => ul.appendChild(buildTree(child)));
+        li.appendChild(ul);
+      }
+
+      return li;
+    }
+
+    function renderTree() {
+      const root = document.getElementById('treeRoot');
+      root.innerHTML = '';
+      const ul = document.createElement('ul');
+      ul.appendChild(buildTree(ivrData));
+      root.appendChild(ul);
+      refreshActiveNode();
+    }
+
+    function refreshActiveNode() {
+      document.querySelectorAll('.node').forEach(el => {
+        el.classList.toggle('active', el.dataset.id === selectedId);
+      });
+    }
+
+    function selectNode(id) {
+      selectedId = id;
+      refreshActiveNode();
+      renderDetails();
+    }
+
+    function renderDetails() {
+      const panel = document.getElementById('detailsPanel');
+      const node = nodeMap.get(selectedId);
+      if (!node) return;
+
+      const nextOptions = (node.children || []).map(child => {
+        return `<button class="mini-btn" onclick="selectNode('${child.id}')">${child.digit ?? '-'} - ${child.label}</button>`;
+      }).join('');
+
+      panel.innerHTML = `
+        <div class="field">
+          <div class="name">Label</div>
+          <div class="content"><strong>${node.label}</strong></div>
         </div>
-      </button>
-
-      {hasChildren && (
-        <div className="space-y-2">
-          {node.children.map((child) => (
-            <TreeNode
-              key={child.id}
-              node={child}
-              level={level + 1}
-              selectedId={selectedId}
-              onSelect={onSelect}
-            />
-          ))}
+        <div class="field">
+          <div class="name">Digit</div>
+          <div class="content">${node.digit ?? '-'}</div>
         </div>
-      )}
-    </div>
-  );
-}
-
-export default function IVRCallFlowViewer() {
-  const allNodes = useMemo(() => flattenTree(ivrData), []);
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(ivrData);
-
-  const results = useMemo(() => {
-    if (!query.trim()) return allNodes;
-    const q = query.toLowerCase();
-    return allNodes.filter(
-      (n) =>
-        n.label?.toLowerCase().includes(q) ||
-        n.prompt?.toLowerCase().includes(q) ||
-        n.target?.toLowerCase().includes(q) ||
-        n.trail?.toLowerCase().includes(q)
-    );
-  }, [allNodes, query]);
-
-  return (
-    <div className="min-h-screen bg-slate-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="grid gap-4 md:grid-cols-[1.2fr_.8fr] items-start">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Company IVR Call Flow</h1>
-            <p className="text-slate-600 mt-2">
-              Demo version with realistic branching for language, customer type, support, complaints, and self-service.
-            </p>
-          </div>
-          <Card className="rounded-2xl shadow-sm">
-            <CardContent className="p-4 flex items-center gap-3 justify-between">
-              <div>
-                <p className="text-sm text-slate-500">Total nodes</p>
-                <p className="text-2xl font-semibold">{allNodes.length}</p>
-              </div>
-              <PhoneCall className="h-8 w-8" />
-            </CardContent>
-          </Card>
+        <div class="field">
+          <div class="name">Type</div>
+          <div class="content">${node.type}</div>
         </div>
-
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
-          <Card className="rounded-2xl shadow-sm">
-            <CardHeader>
-              <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-                <CardTitle>Call Flow Tree</CardTitle>
-                <div className="flex gap-2">
-                  <div className="relative w-full md:w-80">
-                    <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                    <Input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Search prompt, service, queue..."
-                      className="ps-9 rounded-xl"
-                    />
-                  </div>
-                  <Button variant="outline" className="rounded-xl" onClick={() => { setQuery(""); setSelected(ivrData); }}>
-                    <RotateCcw className="h-4 w-4 me-2" /> Reset
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {!query.trim() ? (
-                <TreeNode node={ivrData} selectedId={selected.id} onSelect={setSelected} />
-              ) : (
-                <div className="space-y-2">
-                  {results.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setSelected(item)}
-                      className={`w-full text-left rounded-2xl border p-3 hover:shadow-sm ${selected.id === item.id ? "border-black bg-black text-white" : "bg-white"}`}
-                    >
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {item.digit !== undefined && <Badge variant="secondary">{item.digit}</Badge>}
-                        <span className="font-medium">{item.label}</span>
-                        <Badge variant="outline">{item.type}</Badge>
-                      </div>
-                      <p className={`text-sm mt-1 ${selected.id === item.id ? "text-white/80" : "text-slate-500"}`}>{item.trail}</p>
-                    </button>
-                  ))}
-                  {!results.length && <p className="text-sm text-slate-500">No matching results.</p>}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl shadow-sm sticky top-6">
-            <CardHeader>
-              <CardTitle>Selected Node</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <p className="text-sm text-slate-500">Label</p>
-                <p className="text-lg font-semibold">{selected.label}</p>
-              </div>
-              {selected.digit !== undefined && (
-                <div>
-                  <p className="text-sm text-slate-500">Digit</p>
-                  <p className="font-medium">{selected.digit}</p>
-                </div>
-              )}
-              <div>
-                <p className="text-sm text-slate-500">Prompt</p>
-                <p className="font-medium">{selected.prompt || "—"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500">Path</p>
-                <p className="font-medium">{selected.trail || selected.label}</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500">Type</p>
-                <p className="font-medium">{selected.type}</p>
-              </div>
-              {selected.target && (
-                <div>
-                  <p className="text-sm text-slate-500">Route Target</p>
-                  <p className="font-medium">{selected.target}</p>
-                </div>
-              )}
-              {selected.hours && (
-                <div>
-                  <p className="text-sm text-slate-500">Hours</p>
-                  <p className="font-medium">{selected.hours}</p>
-                </div>
-              )}
-              {selected.children?.length ? (
-                <div>
-                  <p className="text-sm text-slate-500 mb-2">Next Options</p>
-                  <div className="flex flex-wrap gap-2">
-                    {selected.children.map((child) => (
-                      <Button key={child.id} variant="outline" className="rounded-xl" onClick={() => setSelected({ ...child, trail: `${selected.trail || selected.label} → ${child.label}` })}>
-                        {child.digit ?? "-"} · {child.label}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-            </CardContent>
-          </Card>
+        <div class="field">
+          <div class="name">Prompt</div>
+          <div class="content">${node.prompt || '-'}</div>
         </div>
-      </div>
-    </div>
-  );
-}
+        <div class="field">
+          <div class="name">Path</div>
+          <div class="content">${node.path}</div>
+        </div>
+        <div class="field">
+          <div class="name">Target</div>
+          <div class="content">${node.target || '-'}</div>
+        </div>
+        <div class="field">
+          <div class="name">Working hours</div>
+          <div class="content">${node.hours || '-'}</div>
+        </div>
+        <div class="field">
+          <div class="name">Next options</div>
+          <div class="content">${nextOptions ? `<div class="mini-list">${nextOptions}</div>` : 'No further branches'}</div>
+        </div>
+      `;
+    }
+
+    function updateSummary() {
+      document.getElementById('totalNodes').textContent = allNodes.length;
+      document.getElementById('menuNodes').textContent = allNodes.filter(n => n.type === 'menu' || n.type === 'greeting').length;
+      document.getElementById('routeNodes').textContent = allNodes.filter(n => n.type === 'route').length;
+    }
+
+    function applySearch() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const listItems = document.querySelectorAll('.tree li');
+
+      if (!q) {
+        listItems.forEach(li => li.classList.remove('hidden-node'));
+        return;
+      }
+
+      function nodeMatches(node) {
+        return [node.label, node.prompt, node.target, node.path, node.digit, node.hours]
+          .filter(Boolean)
+          .some(v => String(v).toLowerCase().includes(q));
+      }
+
+      function subtreeMatches(node) {
+        if (nodeMatches(node)) return true;
+        return (node.children || []).some(child => subtreeMatches(child));
+      }
+
+      allNodes.forEach(node => {
+        const li = document.querySelector(`li[data-id="${node.id}"]`);
+        if (!li) return;
+        const originalNode = nodeMap.get(node.id);
+        li.classList.toggle('hidden-node', !subtreeMatches(originalNode));
+      });
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applySearch);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      selectedId = ivrData.id;
+      applySearch();
+      refreshActiveNode();
+      renderDetails();
+    });
+    document.getElementById('expandBtn').addEventListener('click', () => {
+      document.getElementById('searchInput').value = '';
+      applySearch();
+    });
+
+    renderTree();
+    updateSummary();
+    renderDetails();
+  </script>
+</body>
+</html>
