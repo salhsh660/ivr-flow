@@ -10,11 +10,10 @@
       --card: #ffffff;
       --text: #1f2937;
       --muted: #6b7280;
-      --line: #cbd5e1;
-      --accent: #111827;
+      --line: #d6deea;
+      --accent: #0f172a;
       --accent-2: #2563eb;
       --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --radius: 18px;
     }
 
     * { box-sizing: border-box; }
@@ -29,40 +28,124 @@
     .page {
       max-width: 1600px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 20px;
     }
 
-    .hero {
-      background: linear-gradient(135deg, #ffffff, #eef4ff);
+    .layout-top {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .sidebar {
+      background: var(--card);
       border: 1px solid #e5e7eb;
       border-radius: 24px;
-      padding: 24px;
       box-shadow: var(--shadow);
-      margin-bottom: 20px;
+      padding: 18px;
+      align-self: start;
+      position: sticky;
+      top: 20px;
     }
 
-    .hero h1 {
-      margin: 0 0 8px;
-      font-size: 32px;
+    .sidebar-header h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
     }
 
-    .hero p {
-      margin: 0;
+    .sidebar-header p {
+      margin: 0 0 18px;
       color: var(--muted);
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+    .sidebar-group + .sidebar-group {
       margin-top: 18px;
     }
 
-    .toolbar input {
+    .sidebar-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .segment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .segment-item {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text);
+      transition: 0.2s ease;
+    }
+
+    .segment-item:hover {
+      border-color: #c7d2fe;
+      transform: translateY(-1px);
+    }
+
+    .segment-item.active {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      color: #1d4ed8;
+      font-weight: bold;
+    }
+
+    .main-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .compact-toolbar {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .compact-toolbar h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+    }
+
+    .compact-toolbar p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 420px;
+      justify-content: flex-end;
+    }
+
+    .toolbar-actions input {
       flex: 1;
-      min-width: 260px;
-      padding: 14px 16px;
+      min-width: 240px;
+      padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid #d1d5db;
       font-size: 14px;
@@ -70,52 +153,48 @@
       background: white;
     }
 
-    .toolbar button {
+    .toolbar-actions button {
       border: none;
       background: var(--accent);
       color: white;
-      padding: 14px 18px;
+      padding: 12px 16px;
       border-radius: 14px;
       cursor: pointer;
       font-size: 14px;
     }
 
-    .toolbar button.secondary {
-      background: white;
-      color: var(--text);
-      border: 1px solid #d1d5db;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin: 20px 0;
-    }
-
-    .summary-card {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 18px;
+    .segment-banner {
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      color: white;
+      border-radius: 24px;
+      padding: 18px 20px;
       box-shadow: var(--shadow);
-      border: 1px solid #e5e7eb;
     }
 
-    .summary-card .label {
-      color: var(--muted);
-      font-size: 13px;
+    .segment-banner .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
       margin-bottom: 8px;
     }
 
-    .summary-card .value {
-      font-size: 28px;
+    .segment-banner .title {
+      font-size: 24px;
       font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .segment-banner .desc {
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.9;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 1.4fr 0.6fr;
-      gap: 20px;
+      grid-template-columns: 1.6fr 0.75fr;
+      gap: 18px;
       align-items: start;
     }
 
@@ -127,35 +206,39 @@
     }
 
     .diagram-header, .details-header {
-      padding: 20px 20px 0;
+      padding: 18px 18px 0;
     }
 
     .diagram-header h2, .details-header h2 {
       margin: 0 0 6px;
-      font-size: 22px;
+      font-size: 20px;
     }
 
     .diagram-header p, .details-header p {
       margin: 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .diagram {
       overflow: auto;
-      padding: 20px 20px 28px;
+      padding: 14px 14px 22px;
+      background: linear-gradient(180deg, #fcfdff, #f8fafc);
+      border-radius: 0 0 24px 24px;
     }
 
     .tree {
       display: flex;
       justify-content: center;
-      min-width: 1100px;
-      padding: 10px 0 20px;
+      min-width: 920px;
+      padding: 0 0 10px;
+      transform: scale(0.88);
+      transform-origin: top center;
     }
 
     .tree ul {
       position: relative;
-      padding-top: 24px;
+      padding-top: 22px;
       margin: 0;
       display: flex;
       justify-content: center;
@@ -165,7 +248,7 @@
       list-style: none;
       text-align: center;
       position: relative;
-      padding: 24px 14px 0 14px;
+      padding: 22px 10px 0 10px;
     }
 
     .tree li::before,
@@ -176,7 +259,7 @@
       right: 50%;
       border-top: 2px solid var(--line);
       width: 50%;
-      height: 24px;
+      height: 22px;
     }
 
     .tree li::after {
@@ -215,17 +298,17 @@
       left: 50%;
       border-left: 2px solid var(--line);
       width: 0;
-      height: 24px;
+      height: 22px;
     }
 
     .node {
-      width: 220px;
+      width: 185px;
       background: white;
       border: 1px solid #dbe3f0;
-      border-radius: var(--radius);
-      padding: 14px;
+      border-radius: 16px;
+      padding: 12px;
       display: inline-block;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
       cursor: pointer;
       transition: 0.2s ease;
       text-align: left;
@@ -233,17 +316,17 @@
 
     .node:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
     }
 
     .node.active {
       border-color: var(--accent-2);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
     .node .top {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
       flex-wrap: wrap;
       margin-bottom: 8px;
@@ -253,10 +336,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 32px;
-      padding: 4px 8px;
+      min-width: 28px;
+      padding: 3px 7px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       background: #eff6ff;
       color: var(--accent-2);
       font-weight: bold;
@@ -264,28 +347,28 @@
 
     .type {
       display: inline-block;
-      padding: 4px 8px;
+      padding: 3px 7px;
       border-radius: 999px;
       background: #f3f4f6;
       color: #374151;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .node h3 {
-      margin: 0 0 6px;
-      font-size: 16px;
+      margin: 0 0 5px;
+      font-size: 14px;
     }
 
     .node p {
       margin: 0;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 12px;
+      line-height: 1.45;
     }
 
     .node .target {
-      margin-top: 10px;
-      font-size: 12px;
+      margin-top: 8px;
+      font-size: 11px;
       color: #0f172a;
       font-weight: bold;
     }
@@ -296,12 +379,12 @@
     }
 
     .details-body {
-      padding: 20px;
+      padding: 18px;
     }
 
     .field {
-      margin-bottom: 16px;
-      padding-bottom: 16px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
       border-bottom: 1px solid #eef2f7;
     }
 
@@ -313,15 +396,15 @@
 
     .field .name {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
     .field .content {
-      font-size: 15px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.55;
       word-break: break-word;
     }
 
@@ -338,7 +421,7 @@
       border-radius: 999px;
       padding: 8px 12px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .hidden-node {
@@ -346,9 +429,28 @@
     }
 
     @media (max-width: 1100px) {
+      .layout-top {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .compact-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .toolbar-actions {
+        min-width: 0;
+        width: 100%;
+      }
+
       .layout {
         grid-template-columns: 1fr;
       }
+
       .details {
         position: static;
       }
@@ -357,42 +459,43 @@
 </head>
 <body>
   <div class="page">
-    <div class="hero">
-      <h1>IVR Call Flow Diagram</h1>
-      <p>
-        Demo HTML version that works directly on GitHub Pages. You can later replace the sample data with your real IVR.
-      </p>
-      <div class="toolbar">
-        <input id="searchInput" type="text" placeholder="Search service, queue, path, prompt..." />
-        <button id="expandBtn" class="secondary">Expand All</button>
-        <button id="resetBtn">Reset</button>
-      </div>
-    </div>
+    <div class="layout-top">
+      <aside class="sidebar" id="segmentSidebar">
+        <div class="sidebar-header">
+          <h2>Customer Segments</h2>
+          <p>Select customer type and account status.</p>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-label">Type</div>
+          <div class="segment-list" id="customerTypeList"></div>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-label">Status</div>
+          <div class="segment-list" id="customerStatusList"></div>
+        </div>
+      </aside>
 
-    <div class="summary">
-      <div class="summary-card">
-        <div class="label">Total nodes</div>
-        <div class="value" id="totalNodes">0</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">Menus</div>
-        <div class="value" id="menuNodes">0</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">Final routes</div>
-        <div class="value" id="routeNodes">0</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">Languages</div>
-        <div class="value">2</div>
-      </div>
+      <section class="main-stage">
+        <div class="compact-toolbar">
+          <div>
+            <h1>IVR Call Flow</h1>
+            <p>Interactive map for the selected customer segment.</p>
+          </div>
+          <div class="toolbar-actions">
+            <input id="searchInput" type="text" placeholder="Search service, queue, path..." />
+            <button id="resetBtn">Reset</button>
+          </div>
+        </div>
+
+        <div class="segment-banner" id="segmentBanner"></div>
+      </section>
     </div>
 
     <div class="layout">
       <div class="diagram-wrap">
         <div class="diagram-header">
           <h2>Flow Diagram</h2>
-          <p>Click any box to view its details.</p>
+          <p>Click any node to view its details.</p>
         </div>
         <div class="diagram">
           <div class="tree" id="treeRoot"></div>
@@ -410,179 +513,170 @@
   </div>
 
   <script>
+    const customerTypes = [
+      'VIP customers',
+      'Old customers',
+      'New customers',
+      'High customers'
+    ];
+
+    const customerStatuses = [
+      'Active',
+      'Suspended',
+      'Dunning 1',
+      'Dunning 2',
+      'Black listed'
+    ];
+
+    let selectedType = customerTypes[0];
+    let selectedStatus = customerStatuses[0];
+
     const ivrData = {
       id: "root",
-      label: "Welcome Message",
-      prompt: "Welcome to Alpha Services. For Arabic press 1, for English press 2, for self-service press 8, or press 0 for operator.",
+      label: "Entry Point",
+      prompt: "Customer identified and routed to the matching IVR journey.",
       type: "greeting",
       hours: "24/7",
       children: [
         {
-          id: "ar",
+          id: "identity",
           digit: "1",
-          label: "Arabic",
-          prompt: "For Arabic, press 1.",
+          label: "Identity & Verification",
+          prompt: "Verify account and customer segment.",
           type: "menu",
           children: [
             {
-              id: "ar-individual",
+              id: "otp",
               digit: "1",
-              label: "Individual Services",
-              prompt: "For individual services, press 1.",
+              label: "OTP Verification",
+              prompt: "Send one time password to the registered number.",
+              type: "route",
+              target: "Authentication Service",
+              hours: "24/7"
+            },
+            {
+              id: "pin",
+              digit: "2",
+              label: "PIN Validation",
+              prompt: "Validate customer PIN and continue.",
+              type: "route",
+              target: "Customer Identity API",
+              hours: "24/7"
+            }
+          ]
+        },
+        {
+          id: "service-menu",
+          digit: "2",
+          label: "Service Menu",
+          prompt: "Move customer to service options based on profile.",
+          type: "menu",
+          children: [
+            {
+              id: "billing",
+              digit: "1",
+              label: "Billing & Payments",
+              prompt: "Billing balance, invoice, and payment actions.",
               type: "menu",
               children: [
                 {
-                  id: "ar-balance",
+                  id: "balance",
                   digit: "1",
-                  label: "Check Balance",
-                  prompt: "To check your balance, press 1.",
-                  type: "route",
-                  target: "Self-Service API / Balance Lookup",
-                  hours: "24/7"
-                },
-                {
-                  id: "ar-payments",
-                  digit: "2",
-                  label: "Recent Payments",
-                  prompt: "For recent payments, press 2.",
+                  label: "Outstanding Balance",
+                  prompt: "Read current outstanding balance.",
                   type: "route",
                   target: "Billing Information Service",
                   hours: "24/7"
                 },
                 {
-                  id: "ar-agent",
-                  digit: "3",
-                  label: "Speak to an Agent",
-                  prompt: "To speak to an agent, press 3.",
-                  type: "route",
-                  target: "Retail Support Queue",
-                  hours: "Sun-Thu 8:00-22:00"
-                }
-              ]
-            },
-            {
-              id: "ar-business",
-              digit: "2",
-              label: "Business Services",
-              prompt: "For business services, press 2.",
-              type: "menu",
-              children: [
-                {
-                  id: "ar-orders",
-                  digit: "1",
-                  label: "Orders and Provisioning",
-                  prompt: "For orders and provisioning, press 1.",
-                  type: "route",
-                  target: "Enterprise Provisioning Team",
-                  hours: "Sun-Thu 8:00-17:00"
-                },
-                {
-                  id: "ar-account-manager",
+                  id: "pay-now",
                   digit: "2",
-                  label: "Account Manager",
-                  prompt: "To reach your account manager, press 2.",
+                  label: "Pay Now",
+                  prompt: "Transfer to payment gateway or send payment link.",
                   type: "route",
-                  target: "Account Management Queue",
-                  hours: "Sun-Thu 8:00-17:00"
+                  target: "Payment Gateway",
+                  hours: "24/7"
                 },
                 {
-                  id: "ar-tech",
+                  id: "promise-pay",
                   digit: "3",
-                  label: "Technical Support",
-                  prompt: "For technical support, press 3.",
-                  type: "menu",
-                  children: [
-                    {
-                      id: "ar-p1",
-                      digit: "1",
-                      label: "Critical Incident",
-                      prompt: "For critical incident, press 1.",
-                      type: "route",
-                      target: "Priority Incident Queue",
-                      hours: "24/7"
-                    },
-                    {
-                      id: "ar-ticket",
-                      digit: "2",
-                      label: "Open Support Ticket",
-                      prompt: "To open a support ticket, press 2.",
-                      type: "route",
-                      target: "Business Helpdesk",
-                      hours: "24/7"
-                    }
-                  ]
+                  label: "Promise to Pay",
+                  prompt: "Register promise to pay request for eligible users.",
+                  type: "route",
+                  target: "Collections Workflow",
+                  hours: "24/7"
                 }
               ]
             },
             {
-              id: "ar-complaints",
-              digit: "3",
-              label: "Complaints",
-              prompt: "For complaints, press 3.",
+              id: "support",
+              digit: "2",
+              label: "Technical Support",
+              prompt: "Troubleshooting and service restoration.",
               type: "menu",
               children: [
                 {
-                  id: "ar-existing-complaint",
+                  id: "incident",
                   digit: "1",
-                  label: "Existing Complaint",
-                  prompt: "For an existing complaint, press 1.",
+                  label: "Open Incident",
+                  prompt: "Create new support incident.",
+                  type: "route",
+                  target: "Incident Management Queue",
+                  hours: "24/7"
+                },
+                {
+                  id: "outage",
+                  digit: "2",
+                  label: "Known Outage",
+                  prompt: "Play outage status or estimated restoration time.",
+                  type: "route",
+                  target: "Network Outage Service",
+                  hours: "24/7"
+                },
+                {
+                  id: "priority-support",
+                  digit: "3",
+                  label: "Priority Support",
+                  prompt: "Available for premium or eligible customers.",
+                  type: "route",
+                  target: "Priority Support Queue",
+                  hours: "24/7"
+                }
+              ]
+            },
+            {
+              id: "retention",
+              digit: "3",
+              label: "Retention & Complaints",
+              prompt: "Complaints, cancellation, retention, and special cases.",
+              type: "menu",
+              children: [
+                {
+                  id: "complaint",
+                  digit: "1",
+                  label: "Register Complaint",
+                  prompt: "Open a new complaint request.",
+                  type: "route",
+                  target: "Complaint Registration Queue",
+                  hours: "Sun-Thu 8:00-20:00"
+                },
+                {
+                  id: "followup",
+                  digit: "2",
+                  label: "Complaint Follow-up",
+                  prompt: "Check complaint status and follow-up actions.",
                   type: "route",
                   target: "Complaint Follow-up Team",
                   hours: "Sun-Thu 8:00-20:00"
                 },
                 {
-                  id: "ar-new-complaint",
-                  digit: "2",
-                  label: "New Complaint",
-                  prompt: "To register a new complaint, press 2.",
+                  id: "retention-offer",
+                  digit: "3",
+                  label: "Retention Offer",
+                  prompt: "Transfer customer to retention team if eligible.",
                   type: "route",
-                  target: "Complaint Registration Queue",
-                  hours: "Sun-Thu 8:00-20:00"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: "en",
-          digit: "2",
-          label: "English",
-          prompt: "For English, press 2.",
-          type: "menu",
-          children: [
-            {
-              id: "en-sales",
-              digit: "1",
-              label: "Sales",
-              prompt: "For sales, press 1.",
-              type: "route",
-              target: "Sales Queue",
-              hours: "Sun-Thu 9:00-18:00"
-            },
-            {
-              id: "en-support",
-              digit: "2",
-              label: "Support",
-              prompt: "For support, press 2.",
-              type: "menu",
-              children: [
-                {
-                  id: "en-technical",
-                  digit: "1",
-                  label: "Technical Support",
-                  prompt: "For technical support, press 1.",
-                  type: "route",
-                  target: "Technical Support Queue",
-                  hours: "24/7"
-                },
-                {
-                  id: "en-billing",
-                  digit: "2",
-                  label: "Billing",
-                  prompt: "For billing, press 2.",
-                  type: "route",
-                  target: "Billing Queue",
-                  hours: "24/7"
+                  target: "Retention Desk",
+                  hours: "Sun-Thu 8:00-22:00"
                 }
               ]
             }
@@ -592,18 +686,18 @@
           id: "self-service",
           digit: "8",
           label: "Digital Self-Service",
-          prompt: "For SMS link to self-service options, press 8.",
+          prompt: "Send digital service link by SMS or WhatsApp.",
           type: "route",
-          target: "SMS Gateway / Self-Service Portal",
+          target: "SMS / WhatsApp Gateway",
           hours: "24/7"
         },
         {
-          id: "operator",
+          id: "agent",
           digit: "0",
-          label: "General Operator",
-          prompt: "To speak with the operator, press 0.",
+          label: "Live Agent",
+          prompt: "Transfer to the best matching queue.",
           type: "route",
-          target: "Front Desk / Reception",
+          target: "Routing Engine / Frontline Agent",
           hours: "24/7"
         }
       ]
@@ -614,15 +708,45 @@
 
     function flatten(node, path = []) {
       const currentPath = [...path, node.label];
-      const items = [{ ...node, path: currentPath.join(' → ') }];
-      nodeMap.set(node.id, { ...node, path: currentPath.join(' → ') });
+      const item = { ...node, path: currentPath.join(' → ') };
+      nodeMap.set(node.id, item);
+      let items = [item];
       if (node.children) {
-        node.children.forEach(child => items.push(...flatten(child, currentPath)));
+        node.children.forEach(child => items = items.concat(flatten(child, currentPath)));
       }
       return items;
     }
 
     const allNodes = flatten(ivrData);
+
+    function renderSegmentControls() {
+      const typeWrap = document.getElementById('customerTypeList');
+      const statusWrap = document.getElementById('customerStatusList');
+
+      typeWrap.innerHTML = customerTypes.map(type => `
+        <button class="segment-item ${type === selectedType ? 'active' : ''}" onclick="setCustomerType('${type}')">${type}</button>
+      `).join('');
+
+      statusWrap.innerHTML = customerStatuses.map(status => `
+        <button class="segment-item ${status === selectedStatus ? 'active' : ''}" onclick="setCustomerStatus('${status}')">${status}</button>
+      `).join('');
+
+      document.getElementById('segmentBanner').innerHTML = `
+        <div class="eyebrow">Selected flow</div>
+        <div class="title">${selectedType} · ${selectedStatus}</div>
+        <div class="desc">Use the left menu to switch between customer categories and account conditions. Each segment may have a different routing policy, payment option, and escalation path.</div>
+      `;
+    }
+
+    function setCustomerType(type) {
+      selectedType = type;
+      renderSegmentControls();
+    }
+
+    function setCustomerStatus(status) {
+      selectedStatus = status;
+      renderSegmentControls();
+    }
 
     function buildTree(node) {
       const li = document.createElement('li');
@@ -708,6 +832,10 @@
 
       panel.innerHTML = `
         <div class="field">
+          <div class="name">Selected segment</div>
+          <div class="content"><strong>${selectedType}</strong> · ${selectedStatus}</div>
+        </div>
+        <div class="field">
           <div class="name">Label</div>
           <div class="content"><strong>${node.label}</strong></div>
         </div>
@@ -743,9 +871,7 @@
     }
 
     function updateSummary() {
-      document.getElementById('totalNodes').textContent = allNodes.length;
-      document.getElementById('menuNodes').textContent = allNodes.filter(n => n.type === 'menu' || n.type === 'greeting').length;
-      document.getElementById('routeNodes').textContent = allNodes.filter(n => n.type === 'route').length;
+      return allNodes.length;
     }
 
     function applySearch() {
@@ -784,11 +910,8 @@
       refreshActiveNode();
       renderDetails();
     });
-    document.getElementById('expandBtn').addEventListener('click', () => {
-      document.getElementById('searchInput').value = '';
-      applySearch();
-    });
 
+    renderSegmentControls();
     renderTree();
     updateSummary();
     renderDetails();
