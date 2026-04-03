@@ -16,6 +16,7 @@
 --green:#45b06d;
 --red:#d5332f;
 --gray:#f6f6f6;
+--chip:#eef2ff;
 --shadow:0 8px 18px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box}
@@ -25,25 +26,19 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:
 .header h1{margin:0;font-size:22px}
 .header .sub{font-size:12px;color:var(--muted);margin-top:4px}
 .search input{width:280px;max-width:100%;padding:9px 11px;border:1px solid #d7dde8;border-radius:10px}
-.menu-bar{background:#fff;border:1px solid #e8ecf3;border-radius:14px;box-shadow:var(--shadow);padding:12px;margin-bottom:14px;display:flex;flex-direction:column;gap:10px}
-.menu-group{display:flex;flex-wrap:wrap;gap:8px}
-.menu-title{width:100%;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.menu-item{border:1px solid #dde4ef;background:#fff;padding:6px 12px;border-radius:999px;font-size:12px;cursor:pointer}
-.menu-item.active{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
 .layout{display:grid;grid-template-columns:1fr 300px;gap:16px}
 .diagram-wrap,.details{background:#fff;border:1px solid #e8ecf3;border-radius:14px;box-shadow:var(--shadow)}
 .diagram-head,.details-head{padding:12px 14px 0}
 .diagram-head h2,.details-head h2{margin:0;font-size:16px}
 .diagram-head p,.details-head p{margin:4px 0 0;font-size:12px;color:var(--muted)}
 .diagram{overflow:auto;padding:14px 10px 18px}
-.canvas{position:relative;min-width:1320px;min-height:760px}
+.canvas{position:relative;min-width:1560px;min-height:920px}
 .connector{position:absolute;background:var(--line)}
 .h-line{height:2px}
 .v-line{width:2px}
 .label{position:absolute;font-size:12px;color:#555;font-weight:bold;background:transparent}
-.box{position:absolute;width:220px;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.06);cursor:pointer;border:1px solid rgba(0,0,0,.08)}
-.box.small{width:210px}
-.box.tiny{width:190px}
+.box{position:absolute;width:220px;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.06);cursor:pointer;border:1px solid rgba(0,0,0,.08);transition:.15s ease}
+.box:hover{transform:translateY(-1px)}
 .box .row{display:flex;min-height:52px}
 .box .corner{width:24px;flex:0 0 24px;background:linear-gradient(135deg,var(--blue) 0 50%,transparent 50% 100%);position:relative}
 .box .corner span{position:absolute;top:4px;left:5px;font-size:10px;color:#fff;font-weight:bold}
@@ -53,10 +48,16 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:
 .box.green .body{background:var(--green);color:#0d321a}
 .box.red .body{background:var(--red);color:#fff}
 .box.gray .body{background:var(--gray);font-weight:normal;justify-content:flex-start;text-align:left}
+.box.chip{width:auto;min-width:120px;box-shadow:none;border:1px solid #dbe3f0;border-radius:999px;overflow:visible}
+.box.chip .row{min-height:40px}
+.box.chip .corner{display:none}
+.box.chip .body{padding:8px 16px;font-size:14px;background:#fff;border-radius:999px}
+.box.chip.active-chip .body{background:#1d4ed8;color:#fff}
 .box.active{outline:3px solid rgba(37,99,235,.25)}
-.decision{position:absolute;width:130px;height:130px;transform:rotate(45deg);background:#efefef;border:2px solid #cfcfcf);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.decision{position:absolute;width:130px;height:130px;transform:rotate(45deg);background:#efefef;border:2px solid #cfcfcf;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .decision .txt{transform:rotate(-45deg);text-align:center;font-size:12px;font-weight:bold;line-height:1.2;color:#4b5563;padding:14px}
 .decision.active{box-shadow:0 0 0 3px rgba(37,99,235,.22)}
+.hint-tag{position:absolute;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .details{padding-bottom:12px;height:max-content;position:sticky;top:18px}
 .details-body{padding:14px}
 .field{padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #eef2f7}
@@ -73,21 +74,16 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:
   <div class="header">
     <div>
       <h1>IVR Flow</h1>
-      <div class="sub">Clean draft matching the current image structure.</div>
+      <div class="sub">Clickable diagram with expand and collapse.</div>
     </div>
     <div class="search"><input id="searchInput" placeholder="Search node text..."></div>
-  </div>
-
-  <div class="menu-bar">
-    <div class="menu-group" id="networkMenu"></div>
-    <div class="menu-group" id="serviceMenu"></div>
   </div>
 
   <div class="layout">
     <div class="diagram-wrap">
       <div class="diagram-head">
         <h2>Flow Diagram</h2>
-        <p>Current draft built from your image.</p>
+        <p>Click stc and then click service nodes to expand or collapse.</p>
       </div>
       <div class="diagram">
         <div class="canvas" id="canvas"></div>
@@ -104,143 +100,153 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:
 </div>
 
 <script>
-const flows = {
-  stc: {
-    services: {
-      "To request a new package or devices": { type: 'single', x: 20, y: 10, w: 220, color: 'blue', digit: '1', label: 'To request a new package or devices', prompt: 'Initial option' },
-      "To manage your numbers": {
-        type: 'custom',
-        nodes: [
-          { id:'root', kind:'box', x:280, y:10, w:220, color:'green', digit:'2', label:'To manage your numbers', prompt:'Customer selects service' },
-          { id:'same', kind:'box', x:760, y:130, w:220, color:'yellow', digit:'1', label:'To Serve you on the same number', prompt:'Continue on same number' },
-          { id:'another', kind:'box', x:1010, y:130, w:220, color:'yellow', digit:'2', label:'To serve another Mobile or Landline number', prompt:'Continue on another number' },
-          { id:'service', kind:'box', x:1260, y:130, w:220, color:'green', digit:'3', label:'For Quick Net & Baity 5G service', prompt:'Check eligibility' },
-
-          { id:'postpaid', kind:'box', x:40, y:385, w:220, color:'blue', label:'IF QN Postpaid', prompt:'QuickNet Postpaid branch' },
-          { id:'postpaid1', kind:'box', x:40, y:447, w:220, color:'yellow', digit:'1', label:'To Manage your Quicknet package', prompt:'Manage package' },
-          { id:'postpaid2', kind:'box', x:40, y:509, w:220, color:'yellow', digit:'2', label:'For Quick Net Support', prompt:'Support' },
-          { id:'postpaid3', kind:'box', x:40, y:571, w:220, color:'yellow', digit:'3', label:'To stop the Quick Net temporarily', prompt:'Temporary stop' },
-          { id:'postpaid4', kind:'box', x:40, y:633, w:220, color:'red', digit:'4', label:'To cancel Quick Net SIM', prompt:'Cancel SIM' },
-
-          { id:'prepaid', kind:'box', x:500, y:385, w:220, color:'blue', label:'IF QN Prepaid', prompt:'QuickNet Prepaid branch' },
-          { id:'prepaid1', kind:'box', x:500, y:447, w:220, color:'yellow', digit:'1', label:'To Manage your Quicknet package', prompt:'Manage package' },
-          { id:'prepaid2', kind:'box', x:500, y:509, w:220, color:'yellow', digit:'2', label:'For Quick Net Support', prompt:'Support' },
-          { id:'prepaid3', kind:'box', x:500, y:571, w:220, color:'yellow', digit:'3', label:'To stop the Quick Net temporarily', prompt:'Temporary stop' },
-          { id:'prepaid4', kind:'box', x:500, y:633, w:220, color:'yellow', digit:'4', label:'To cancel Quick Net SIM', prompt:'Cancel SIM' },
-
-          { id:'baity', kind:'box', x:900, y:385, w:220, color:'blue', label:'IF Baity 5G', prompt:'Baity 5G branch' },
-          { id:'baity1', kind:'box', x:900, y:447, w:220, color:'yellow', digit:'1', label:'To Manage your Baity 5G package', prompt:'Manage package' },
-          { id:'baity2', kind:'box', x:900, y:509, w:220, color:'yellow', digit:'2', label:'For Baity 5G Support', prompt:'Support' },
-          { id:'baity3', kind:'box', x:900, y:571, w:220, color:'yellow', digit:'3', label:'To stop Baity 5G temporarily', prompt:'Temporary stop' },
-          { id:'baity4', kind:'box', x:900, y:633, w:220, color:'yellow', digit:'4', label:'To cancel Baity 5G SIM', prompt:'Cancel SIM' },
-
-          { id:'decision', kind:'decision', x:1225, y:300, label:'Customer has QN or Baity 5G?' },
-          { id:'yesLabel', kind:'label', x:1175, y:350, label:'Yes' },
-          { id:'noLabel', kind:'label', x:1397, y:350, label:'No' },
-
-          { id:'note', kind:'box', x:1355, y:430, w:220, color:'gray', label:'Dear Customer, You do not have any Quicknet or Baity 5G SIM for the same ID.', prompt:'No eligible SIM' },
-          { id:'buy1', kind:'box', x:1420, y:620, w:220, color:'yellow', digit:'1', label:'To get Quick net SIM', prompt:'Purchase option' },
-          { id:'buy2', kind:'box', x:1420, y:682, w:220, color:'yellow', digit:'2', label:'To get Baity 5G SIM', prompt:'Purchase option' }
-        ],
-        connectors: [
-          { x:390, y:62, w:0, h:55 },
-          { x:390, y:117, w:980, h:0 },
-          { x:870, y:117, w:0, h:13 },
-          { x:1120, y:117, w:0, h:13 },
-          { x:1370, y:117, w:0, h:13 },
-
-          { x:870, y:182, w:0, h:150 },
-          { x:150, y:332, w:720, h:0 },
-          { x:150, y:332, w:0, h:53 },
-          { x:610, y:332, w:0, h:53 },
-          { x:1010, y:332, w:0, h:53 },
-          { x:870, y:332, w:355, h:0 },
-          { x:1225, y:332, w:0, h:33 },
-
-          { x:1370, y:182, w:0, h:118 },
-          { x:1370, y:300, w:-80, h:0 },
-          { x:1290, y:300, w:0, h:85 },
-
-          { x:1290, y:430, w:0, h:186 },
-          { x:1290, y:616, w:130, h:0 },
-          { x:1420, y:616, w:0, h:14 },
-          { x:1290, y:678, w:130, h:0 },
-          { x:1420, y:678, w:0, h:14 }
-        ]
-      }
-    }
-  },
-  "non-stc": {
-    services: {
-      "No flow yet": { type:'single', x: 40, y: 40, w: 220, color:'gray', label:'non-stc', prompt:'Flow will be added later.' }
-    }
-  }
+const state = {
+  openNetwork: 'stc',
+  openService: 'manage',
+  selectedId: 'network-stc'
 };
 
-const networks = ['stc','non-stc'];
-let selectedNetwork = 'stc';
-let selectedService = 'To manage your numbers';
-let selectedId = null;
-let currentFlow = null;
-let nodeMap = new Map();
+const elements = [
+  { id:'hint-network', kind:'hint', x:20, y:12, text:'Network' },
+  { id:'network-stc', kind:'chip', x:20, y:38, w:120, color:'chip', label:'stc', parent:null, toggle:'network', value:'stc' },
+  { id:'network-nonstc', kind:'chip', x:150, y:38, w:120, color:'chip', label:'non-stc', parent:null, toggle:'network', value:'non-stc' },
 
-function renderMenus(){
-  const net = document.getElementById('networkMenu');
-  const svc = document.getElementById('serviceMenu');
-  net.innerHTML = "<div class='menu-title'>Network</div>";
-  networks.forEach(n=>{
-    const b=document.createElement('button');
-    b.className='menu-item'+(n===selectedNetwork?' active':'');
-    b.textContent=n;
-    b.onclick=()=>{selectedNetwork=n; selectedService=Object.keys(flows[selectedNetwork].services)[0]; loadFlow();};
-    net.appendChild(b);
-  });
-  svc.innerHTML = "<div class='menu-title'>Service</div>";
-  Object.keys(flows[selectedNetwork].services).forEach(s=>{
-    const b=document.createElement('button');
-    b.className='menu-item'+(s===selectedService?' active':'');
-    b.textContent=s;
-    b.onclick=()=>{selectedService=s; loadFlow();};
-    svc.appendChild(b);
-  });
+  { id:'hint-service', kind:'hint', x:20, y:94, text:'Service' },
+  { id:'service-request', kind:'chip', x:20, y:118, w:280, color:'chip', label:'To request a new package or devices', parent:'stc', toggle:'service', value:'request' },
+  { id:'service-manage', kind:'chip', x:312, y:118, w:250, color:'chip', label:'To manage your numbers', parent:'stc', toggle:'service', value:'manage' },
+
+  { id:'root-request', kind:'box', x:20, y:210, w:220, color:'blue', digit:'1', label:'To request a new package or devices', prompt:'Initial option', parentService:'request' },
+
+  { id:'root-manage', kind:'box', x:280, y:210, w:220, color:'green', digit:'2', label:'To manage your numbers', prompt:'Customer selects service', parentService:'manage' },
+  { id:'same', kind:'box', x:760, y:330, w:220, color:'yellow', digit:'1', label:'To Serve you on the same number', prompt:'Continue on same number', parentService:'manage' },
+  { id:'another', kind:'box', x:1010, y:330, w:220, color:'yellow', digit:'2', label:'To serve another Mobile or Landline number', prompt:'Continue on another number', parentService:'manage' },
+  { id:'service', kind:'box', x:1260, y:330, w:220, color:'green', digit:'3', label:'For Quick Net & Baity 5G service', prompt:'Check eligibility', parentService:'manage' },
+
+  { id:'postpaid', kind:'box', x:40, y:585, w:220, color:'blue', label:'IF QN Postpaid', prompt:'QuickNet Postpaid branch', parentService:'manage' },
+  { id:'postpaid1', kind:'box', x:40, y:647, w:220, color:'yellow', digit:'1', label:'To Manage your Quicknet package', prompt:'Manage package', parentService:'manage' },
+  { id:'postpaid2', kind:'box', x:40, y:709, w:220, color:'yellow', digit:'2', label:'For Quick Net Support', prompt:'Support', parentService:'manage' },
+  { id:'postpaid3', kind:'box', x:40, y:771, w:220, color:'yellow', digit:'3', label:'To stop the Quick Net temporarily', prompt:'Temporary stop', parentService:'manage' },
+  { id:'postpaid4', kind:'box', x:40, y:833, w:220, color:'red', digit:'4', label:'To cancel Quick Net SIM', prompt:'Cancel SIM', parentService:'manage' },
+
+  { id:'prepaid', kind:'box', x:500, y:585, w:220, color:'blue', label:'IF QN Prepaid', prompt:'QuickNet Prepaid branch', parentService:'manage' },
+  { id:'prepaid1', kind:'box', x:500, y:647, w:220, color:'yellow', digit:'1', label:'To Manage your Quicknet package', prompt:'Manage package', parentService:'manage' },
+  { id:'prepaid2', kind:'box', x:500, y:709, w:220, color:'yellow', digit:'2', label:'For Quick Net Support', prompt:'Support', parentService:'manage' },
+  { id:'prepaid3', kind:'box', x:500, y:771, w:220, color:'yellow', digit:'3', label:'To stop the Quick Net temporarily', prompt:'Temporary stop', parentService:'manage' },
+  { id:'prepaid4', kind:'box', x:500, y:833, w:220, color:'yellow', digit:'4', label:'To cancel Quick Net SIM', prompt:'Cancel SIM', parentService:'manage' },
+
+  { id:'baity', kind:'box', x:900, y:585, w:220, color:'blue', label:'IF Baity 5G', prompt:'Baity 5G branch', parentService:'manage' },
+  { id:'baity1', kind:'box', x:900, y:647, w:220, color:'yellow', digit:'1', label:'To Manage your Baity 5G package', prompt:'Manage package', parentService:'manage' },
+  { id:'baity2', kind:'box', x:900, y:709, w:220, color:'yellow', digit:'2', label:'For Baity 5G Support', prompt:'Support', parentService:'manage' },
+  { id:'baity3', kind:'box', x:900, y:771, w:220, color:'yellow', digit:'3', label:'To stop Baity 5G temporarily', prompt:'Temporary stop', parentService:'manage' },
+  { id:'baity4', kind:'box', x:900, y:833, w:220, color:'yellow', digit:'4', label:'To cancel Baity 5G SIM', prompt:'Cancel SIM', parentService:'manage' },
+
+  { id:'decision', kind:'decision', x:1225, y:500, label:'Customer has QN or Baity 5G?', parentService:'manage' },
+  { id:'yesLabel', kind:'label', x:1175, y:550, label:'Yes', parentService:'manage' },
+  { id:'noLabel', kind:'label', x:1397, y:550, label:'No', parentService:'manage' },
+  { id:'note', kind:'box', x:1355, y:630, w:220, color:'gray', label:'Dear Customer, You do not have any Quicknet or Baity 5G SIM for the same ID.', prompt:'No eligible SIM', parentService:'manage' },
+  { id:'buy1', kind:'box', x:1420, y:820, w:220, color:'yellow', digit:'1', label:'To get Quick net SIM', prompt:'Purchase option', parentService:'manage' },
+  { id:'buy2', kind:'box', x:1420, y:882, w:220, color:'yellow', digit:'2', label:'To get Baity 5G SIM', prompt:'Purchase option', parentService:'manage' },
+
+  { id:'placeholder-nonstc', kind:'box', x:20, y:210, w:220, color:'gray', label:'non-stc', prompt:'Flow will be added later.', parent:'non-stc' }
+];
+
+const connectors = [
+  { id:'c1', x:390, y:262, w:0, h:55, parentService:'manage' },
+  { id:'c2', x:390, y:317, w:980, h:0, parentService:'manage' },
+  { id:'c3', x:870, y:317, w:0, h:13, parentService:'manage' },
+  { id:'c4', x:1120, y:317, w:0, h:13, parentService:'manage' },
+  { id:'c5', x:1370, y:317, w:0, h:13, parentService:'manage' },
+  { id:'c6', x:870, y:382, w:0, h:190, parentService:'manage' },
+  { id:'c7', x:150, y:572, w:720, h:0, parentService:'manage' },
+  { id:'c8', x:150, y:572, w:0, h:13, parentService:'manage' },
+  { id:'c9', x:610, y:572, w:0, h:13, parentService:'manage' },
+  { id:'c10', x:1010, y:572, w:0, h:13, parentService:'manage' },
+  { id:'c11', x:870, y:572, w:355, h:0, parentService:'manage' },
+  { id:'c12', x:1225, y:572, w:0, h:58, parentService:'manage' },
+  { id:'c13', x:1370, y:382, w:0, h:118, parentService:'manage' },
+  { id:'c14', x:1290, y:500, w:80, h:0, parentService:'manage' },
+  { id:'c15', x:1290, y:500, w:0, h:130, parentService:'manage' },
+  { id:'c16', x:1290, y:630, w:65, h:0, parentService:'manage' },
+  { id:'c17', x:1290, y:630, w:0, h:203, parentService:'manage' },
+  { id:'c18', x:1290, y:833, w:130, h:0, parentService:'manage' },
+  { id:'c19', x:1420, y:833, w:0, h:14, parentService:'manage' },
+  { id:'c20', x:1290, y:895, w:130, h:0, parentService:'manage' },
+  { id:'c21', x:1420, y:895, w:0, h:14, parentService:'manage' }
+];
+
+function isVisible(item){
+  if(item.parent && item.parent !== state.openNetwork) return false;
+  if(item.parentService){
+    return state.openNetwork === 'stc' && state.openService === item.parentService;
+  }
+  return true;
 }
 
-function boxHtml(node){
+function makeBox(el){
   const div=document.createElement('div');
-  div.className=`box ${node.color||'gray'}`;
-  if(node.kind==='label') return div;
-  div.style.left=node.x+'px';
-  div.style.top=node.y+'px';
-  div.style.width=(node.w||220)+'px';
-  div.dataset.id=node.id;
-  div.innerHTML=`<div class="row"><div class="corner"><span>${node.digit||''}</span></div><div class="body">${node.label||''}</div></div>`;
-  div.onclick=(e)=>{e.stopPropagation(); selectedId=node.id; highlight(); renderDetails();};
+  div.className=`box ${el.color||'gray'} ${el.kind==='chip'?'chip':''}`;
+  if(el.kind==='chip' && ((el.toggle==='network' && state.openNetwork===el.value) || (el.toggle==='service' && state.openService===el.value))) {
+    div.classList.add('active-chip');
+  }
+  div.style.left=el.x+'px';
+  div.style.top=el.y+'px';
+  div.style.width=(el.w||220)+'px';
+  div.dataset.id=el.id;
+  div.innerHTML=`<div class="row">${el.kind==='chip' ? '' : `<div class="corner"><span>${el.digit||''}</span></div>`}<div class="body">${el.label||''}</div></div>`;
+  div.onclick=(e)=>{
+    e.stopPropagation();
+    if(el.toggle==='network'){
+      state.openNetwork = el.value;
+      state.openService = el.value==='stc' ? 'manage' : null;
+      state.selectedId = el.id;
+      renderAll();
+      return;
+    }
+    if(el.toggle==='service'){
+      state.openService = state.openService===el.value ? null : el.value;
+      state.selectedId = el.id;
+      renderAll();
+      return;
+    }
+    state.selectedId=el.id;
+    highlight();
+    renderDetails();
+  };
   return div;
 }
 
-function decisionHtml(node){
+function makeDecision(el){
   const div=document.createElement('div');
   div.className='decision';
-  div.style.left=node.x+'px';
-  div.style.top=node.y+'px';
-  div.dataset.id=node.id;
-  div.innerHTML=`<div class="txt">${node.label}</div>`;
-  div.onclick=(e)=>{e.stopPropagation(); selectedId=node.id; highlight(); renderDetails();};
+  div.style.left=el.x+'px';
+  div.style.top=el.y+'px';
+  div.dataset.id=el.id;
+  div.innerHTML=`<div class="txt">${el.label}</div>`;
+  div.onclick=(e)=>{e.stopPropagation(); state.selectedId=el.id; highlight(); renderDetails();};
   return div;
 }
 
-function labelHtml(node){
+function makeLabel(el){
   const div=document.createElement('div');
   div.className='label';
-  div.style.left=node.x+'px';
-  div.style.top=node.y+'px';
-  div.textContent=node.label;
+  div.style.left=el.x+'px';
+  div.style.top=el.y+'px';
+  div.textContent=el.label;
   return div;
 }
 
-function connectorHtml(c){
+function makeHint(el){
   const div=document.createElement('div');
-  const isH = c.h===0;
+  div.className='hint-tag';
+  div.style.left=el.x+'px';
+  div.style.top=el.y+'px';
+  div.textContent=el.text;
+  return div;
+}
+
+function makeConnector(c){
+  const div=document.createElement('div');
+  const isH=c.h===0;
   div.className='connector '+(isH?'h-line':'v-line');
   if(isH){
     div.style.left=(c.w>=0?c.x:c.x+c.w)+'px';
@@ -254,39 +260,21 @@ function connectorHtml(c){
   return div;
 }
 
-function rebuildNodeMap(){
-  nodeMap = new Map();
-  if(currentFlow.type==='single'){
-    const id='single';
-    nodeMap.set(id,{id,label:currentFlow.label,prompt:currentFlow.prompt,path:currentFlow.label,dtmfPath:currentFlow.digit||'-'});
-    selectedId=id;
-    return;
-  }
-  currentFlow.nodes.forEach(n=>{
-    nodeMap.set(n.id,{...n,path:n.label,dtmfPath:n.digit||'-'});
-  });
-  selectedId=currentFlow.nodes[0].id;
-}
-
 function renderCanvas(){
   const canvas=document.getElementById('canvas');
   canvas.innerHTML='';
-  if(currentFlow.type==='single'){
-    const n={...currentFlow,id:'single',kind:'box'};
-    canvas.style.minHeight='220px';
-    canvas.style.minWidth='500px';
-    canvas.appendChild(boxHtml(n));
-    return;
-  }
-  canvas.style.minHeight='760px';
-  canvas.style.minWidth='1660px';
-  currentFlow.connectors.forEach(c=>canvas.appendChild(connectorHtml(c)));
-  currentFlow.nodes.forEach(n=>{
-    let el;
-    if(n.kind==='decision') el=decisionHtml(n);
-    else if(n.kind==='label') el=labelHtml(n);
-    else el=boxHtml(n);
-    canvas.appendChild(el);
+  elements.forEach(el=>{
+    if(!isVisible(el)) return;
+    let node;
+    if(el.kind==='decision') node=makeDecision(el);
+    else if(el.kind==='label') node=makeLabel(el);
+    else if(el.kind==='hint') node=makeHint(el);
+    else node=makeBox(el);
+    canvas.appendChild(node);
+  });
+  connectors.forEach(c=>{
+    if(!isVisible(c)) return;
+    canvas.appendChild(makeConnector(c));
   });
   highlight();
   applySearch();
@@ -294,50 +282,55 @@ function renderCanvas(){
 
 function highlight(){
   document.querySelectorAll('.box,.decision').forEach(el=>{
-    el.classList.toggle('active', el.dataset.id===selectedId);
+    el.classList.toggle('active', el.dataset.id===state.selectedId && !el.classList.contains('chip'));
   });
 }
 
-function renderDetails(){
-  const node=nodeMap.get(selectedId);
-  const panel=document.getElementById('detailsPanel');
-  if(!node) return;
-  panel.innerHTML=`
-    <div class="field"><div class="name">Network</div><div class="content">${selectedNetwork}</div></div>
-    <div class="field"><div class="name">Service</div><div class="content">${selectedService}</div></div>
-    <div class="field"><div class="name">Node</div><div class="content">${node.label||'-'}</div></div>
-    <div class="field"><div class="name">Prompt</div><div class="content">${node.prompt||'-'}</div></div>
-    <div class="field"><div class="name">DTMF</div><div class="content">${node.dtmfPath||'-'}</div></div>
-    <div class="field"><div class="name">Notes</div><div class="content hint">This version is laid out manually to keep the diagram clean and close to your reference image.</div></div>`;
+function getNode(id){
+  return elements.find(e=>e.id===id);
 }
 
-function loadFlow(){
-  currentFlow = flows[selectedNetwork].services[selectedService];
-  renderMenus();
-  rebuildNodeMap();
+function renderDetails(){
+  const node=getNode(state.selectedId);
+  const panel=document.getElementById('detailsPanel');
+  if(!node){
+    panel.innerHTML='';
+    return;
+  }
+  let type = 'Node';
+  if(node.toggle==='network') type='Network';
+  if(node.toggle==='service') type='Service';
+  if(node.kind==='decision') type='Decision';
+  panel.innerHTML=`
+    <div class="field"><div class="name">Selected</div><div class="content">${node.label||node.text||'-'}</div></div>
+    <div class="field"><div class="name">Type</div><div class="content">${type}</div></div>
+    <div class="field"><div class="name">Network</div><div class="content">${state.openNetwork||'-'}</div></div>
+    <div class="field"><div class="name">Service</div><div class="content">${state.openService||'-'}</div></div>
+    <div class="field"><div class="name">Prompt</div><div class="content">${node.prompt||'-'}</div></div>
+    <div class="field"><div class="name">Notes</div><div class="content hint">Click stc or non-stc to open what is under it. Click a service chip to open or close its flow.</div></div>`;
+}
+
+function renderAll(){
   renderCanvas();
   renderDetails();
 }
 
 function applySearch(){
   const q=document.getElementById('searchInput').value.trim().toLowerCase();
-  const canvas=document.getElementById('canvas');
-  if(currentFlow.type==='single'){
-    const el=canvas.querySelector('.box');
-    if(!el) return;
-    el.classList.toggle('hidden', q && !(currentFlow.label+' '+(currentFlow.prompt||'')).toLowerCase().includes(q));
-    return;
-  }
-  currentFlow.nodes.forEach(n=>{
-    const el=canvas.querySelector(`[data-id="${n.id}"]`);
-    if(!el || n.kind==='label') return;
-    const txt=(n.label+' '+(n.prompt||'')+' '+(n.digit||'')).toLowerCase();
-    el.classList.toggle('hidden', q && !txt.includes(q));
+  if(!q) return;
+  document.querySelectorAll('.box,.decision,.label,.hint-tag,.connector').forEach(el=>{
+    if(el.classList.contains('connector')) return;
+    const id=el.dataset.id;
+    if(!id) return;
+    const data=getNode(id);
+    if(!data) return;
+    const txt=((data.label||'')+' '+(data.prompt||'')+' '+(data.text||'')).toLowerCase();
+    if(!txt.includes(q)) el.classList.add('hidden');
   });
 }
 
-document.getElementById('searchInput').addEventListener('input', applySearch);
-loadFlow();
+document.getElementById('searchInput').addEventListener('input', renderAll);
+renderAll();
 </script>
 </body>
 </html>
