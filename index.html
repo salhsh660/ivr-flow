@@ -9,67 +9,63 @@
 --bg:#f4f6fb;
 --card:#ffffff;
 --text:#1f2937;
---line:#d8c58a;
---shadow:0 10px 25px rgba(0,0,0,.08);
---blue:#17178f;
---yellow:#e7c63b;
---green:#35a765;
---red:#cf2e2e;
---gray:#f3f4f6;
+--muted:#6b7280;
+--line:#d5c18a;
+--blue:#16167f;
+--yellow:#e2bf33;
+--green:#45b06d;
+--red:#d5332f;
+--gray:#f6f6f6;
+--shadow:0 8px 18px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.page{max-width:1700px;margin:auto;padding:20px}
-.header{background:#fff;padding:16px 20px;border-radius:16px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px}
-.header h1{margin:0;font-size:26px}
-.header .sub{font-size:13px;color:#6b7280;margin-top:4px}
-.search input{width:320px;max-width:100%;padding:10px 12px;border-radius:10px;border:1px solid #d1d5db}
-.menu-bar{background:#fff;border-radius:14px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.page{max-width:1600px;margin:auto;padding:18px}
+.header{background:#fff;border:1px solid #e8ecf3;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.header h1{margin:0;font-size:22px}
+.header .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.search input{width:280px;max-width:100%;padding:9px 11px;border:1px solid #d7dde8;border-radius:10px}
+.menu-bar{background:#fff;border:1px solid #e8ecf3;border-radius:14px;box-shadow:var(--shadow);padding:12px;margin-bottom:14px;display:flex;flex-direction:column;gap:10px}
 .menu-group{display:flex;flex-wrap:wrap;gap:8px}
-.menu-title{width:100%;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#6b7280;margin-bottom:2px}
-.menu-item{border:1px solid #e5e7eb;padding:6px 14px;border-radius:999px;background:#fff;font-size:13px;cursor:pointer}
-.menu-item.active{background:#2563eb;color:#fff;border-color:#2563eb}
-.layout{display:grid;grid-template-columns:1fr 330px;gap:20px}
-.diagram-wrap{background:#fff;border-radius:16px;padding:12px;box-shadow:var(--shadow)}
-.diagram{overflow:auto;padding:6px}
-.tree{transform:scale(.78);transform-origin:top center;min-width:1450px;display:flex;justify-content:center;padding-bottom:40px}
-.tree ul{position:relative;padding-top:28px;display:flex;justify-content:center;margin:0}
-.tree li{list-style:none;text-align:center;position:relative;padding:28px 10px 0 10px}
-.tree li::before,.tree li::after{content:'';position:absolute;top:0;right:50%;border-top:2px solid var(--line);width:50%;height:28px}
-.tree li::after{right:auto;left:50%;border-left:2px solid var(--line)}
-.tree li:only-child::before,.tree li:only-child::after{display:none}
-.tree li:only-child{padding-top:0}
-.tree li:first-child::before,.tree li:last-child::after{border:0}
-.tree li:last-child::before{border-right:2px solid var(--line);border-radius:0 10px 0 0}
-.tree li:first-child::after{border-radius:10px 0 0 0}
-.tree ul ul::before{content:'';position:absolute;top:0;left:50%;border-left:2px solid var(--line);height:28px}
-.node{width:235px;padding:0;border-radius:12px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.06);text-align:left;cursor:pointer;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
-.node:hover{box-shadow:0 10px 20px rgba(0,0,0,.10)}
-.node.active{outline:3px solid rgba(37,99,235,.25)}
-.node-head{display:flex;align-items:stretch;min-height:64px}
-.corner{width:26px;flex:0 0 26px;background:linear-gradient(135deg,var(--blue) 0 50%,transparent 50% 100%);position:relative}
-.corner span{position:absolute;top:5px;left:6px;font-size:10px;font-weight:bold;color:#fff}
-.body{padding:10px 12px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:bold;font-size:13px;line-height:1.25;flex:1}
-.node.yellow .body{background:var(--yellow)}
-.node.green .body{background:var(--green);color:#072b16}
-.node.blue .body{background:var(--blue);color:#fff}
-.node.red .body{background:var(--red);color:#fff}
-.node.gray .body{background:var(--gray)}
-.node.small{width:210px}
-.node.decision{width:190px;border:none;box-shadow:none;background:transparent;overflow:visible}
-.node.decision .diamond{width:150px;height:150px;background:#ececec;border:2px solid #c8c8c8;transform:rotate(45deg);margin:15px auto;display:flex;align-items:center;justify-content:center;padding:20px}
-.node.decision .diamond-text{transform:rotate(-45deg);font-weight:bold;font-size:13px;line-height:1.2;text-align:center;color:#444}
-.node.note{width:250px;border:2px dashed #bdbdbd;box-shadow:none}
-.node.note .body{background:#fafafa;font-weight:normal;text-align:left;justify-content:flex-start;padding:14px}
-.node-label{font-size:11px;color:#666;margin-top:6px}
-.details{background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow);position:sticky;top:20px;height:max-content}
-.field{margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px}
-.field:last-child{border-bottom:none}
-.name{font-size:11px;color:#6b7280;text-transform:uppercase;margin-bottom:3px}
-.content{font-size:14px;line-height:1.5}
-.hint{font-size:12px;color:#6b7280}
+.menu-title{width:100%;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.menu-item{border:1px solid #dde4ef;background:#fff;padding:6px 12px;border-radius:999px;font-size:12px;cursor:pointer}
+.menu-item.active{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.layout{display:grid;grid-template-columns:1fr 300px;gap:16px}
+.diagram-wrap,.details{background:#fff;border:1px solid #e8ecf3;border-radius:14px;box-shadow:var(--shadow)}
+.diagram-head,.details-head{padding:12px 14px 0}
+.diagram-head h2,.details-head h2{margin:0;font-size:16px}
+.diagram-head p,.details-head p{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.diagram{overflow:auto;padding:14px 10px 18px}
+.canvas{position:relative;min-width:1320px;min-height:760px}
+.connector{position:absolute;background:var(--line)}
+.h-line{height:2px}
+.v-line{width:2px}
+.label{position:absolute;font-size:12px;color:#555;font-weight:bold;background:transparent}
+.box{position:absolute;width:220px;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.06);cursor:pointer;border:1px solid rgba(0,0,0,.08)}
+.box.small{width:210px}
+.box.tiny{width:190px}
+.box .row{display:flex;min-height:52px}
+.box .corner{width:24px;flex:0 0 24px;background:linear-gradient(135deg,var(--blue) 0 50%,transparent 50% 100%);position:relative}
+.box .corner span{position:absolute;top:4px;left:5px;font-size:10px;color:#fff;font-weight:bold}
+.box .body{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 10px;font-size:12px;font-weight:bold;line-height:1.25}
+.box.blue .body{background:var(--blue);color:#fff}
+.box.yellow .body{background:var(--yellow)}
+.box.green .body{background:var(--green);color:#0d321a}
+.box.red .body{background:var(--red);color:#fff}
+.box.gray .body{background:var(--gray);font-weight:normal;justify-content:flex-start;text-align:left}
+.box.active{outline:3px solid rgba(37,99,235,.25)}
+.decision{position:absolute;width:130px;height:130px;transform:rotate(45deg);background:#efefef;border:2px solid #cfcfcf);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.decision .txt{transform:rotate(-45deg);text-align:center;font-size:12px;font-weight:bold;line-height:1.2;color:#4b5563;padding:14px}
+.decision.active{box-shadow:0 0 0 3px rgba(37,99,235,.22)}
+.details{padding-bottom:12px;height:max-content;position:sticky;top:18px}
+.details-body{padding:14px}
+.field{padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #eef2f7}
+.field:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.name{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.content{font-size:13px;line-height:1.45}
+.hint{font-size:12px;color:var(--muted)}
 .hidden{display:none!important}
-@media(max-width:1100px){.layout{grid-template-columns:1fr}.details{position:static}.tree{transform:scale(.65);transform-origin:top left;min-width:1300px}.search input{width:220px}}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.details{position:static}.search input{width:200px}}
 </style>
 </head>
 <body>
@@ -77,7 +73,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:
   <div class="header">
     <div>
       <h1>IVR Flow</h1>
-      <div class="sub">JSON-driven diagram matching the current draft flow.</div>
+      <div class="sub">Clean draft matching the current image structure.</div>
     </div>
     <div class="search"><input id="searchInput" placeholder="Search node text..."></div>
   </div>
@@ -89,11 +85,21 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:
 
   <div class="layout">
     <div class="diagram-wrap">
+      <div class="diagram-head">
+        <h2>Flow Diagram</h2>
+        <p>Current draft built from your image.</p>
+      </div>
       <div class="diagram">
-        <div class="tree" id="treeRoot"></div>
+        <div class="canvas" id="canvas"></div>
       </div>
     </div>
-    <div class="details" id="detailsPanel"></div>
+    <div class="details">
+      <div class="details-head">
+        <h2>Details</h2>
+        <p>Selected node info.</p>
+      </div>
+      <div class="details-body" id="detailsPanel"></div>
+    </div>
   </div>
 </div>
 
@@ -101,369 +107,232 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:
 const flows = {
   stc: {
     services: {
-      "To request a new package or devices": {
-        id: "request-package",
-        label: "To request a new package or devices",
-        digit: "1",
-        color: "blue",
-        prompt: "Initial option",
-        children: []
-      },
+      "To request a new package or devices": { type: 'single', x: 20, y: 10, w: 220, color: 'blue', digit: '1', label: 'To request a new package or devices', prompt: 'Initial option' },
       "To manage your numbers": {
-        id: "manage-numbers",
-        label: "To manage your numbers",
-        digit: "2",
-        color: "green",
-        prompt: "Customer selects service",
-        children: [
-          {
-            id:"same-number",
-            digit:"1",
-            label:"To Serve you on the same number",
-            prompt:"Continue on the same number",
-            color:"yellow",
-            children:[
-              {
-                id:"qn-postpaid",
-                label:"IF QN Postpaid",
-                prompt:"QuickNet Postpaid branch",
-                color:"blue",
-                children:[
-                  {digit:"1",label:"To Manage your Quicknet package",prompt:"Manage package",color:"yellow"},
-                  {digit:"2",label:"For Quick Net Support",prompt:"Support",color:"yellow"},
-                  {digit:"3",label:"To stop the Quick Net temporarily",prompt:"Temporary stop",color:"yellow"},
-                  {digit:"4",label:"To cancel Quick Net SIM",prompt:"Cancel SIM",color:"red"}
-                ]
-              },
-              {
-                id:"qn-prepaid",
-                label:"IF QN Prepaid",
-                prompt:"QuickNet Prepaid branch",
-                color:"blue",
-                children:[
-                  {digit:"1",label:"To Manage your Quicknet package",prompt:"Manage package",color:"yellow"},
-                  {digit:"2",label:"For Quick Net Support",prompt:"Support",color:"yellow"},
-                  {digit:"3",label:"To stop the Quick Net temporarily",prompt:"Temporary stop",color:"yellow"},
-                  {digit:"4",label:"To cancel Quick Net SIM",prompt:"Cancel SIM",color:"yellow"}
-                ]
-              },
-              {
-                id:"baity5g-branch",
-                label:"IF Baity 5G",
-                prompt:"Baity 5G branch",
-                color:"blue",
-                children:[
-                  {digit:"1",label:"To Manage your Baity 5G package",prompt:"Manage package",color:"yellow"},
-                  {digit:"2",label:"For Baity 5G Support",prompt:"Support",color:"yellow"},
-                  {digit:"3",label:"To stop Baity 5G temporarily",prompt:"Temporary stop",color:"yellow"},
-                  {digit:"4",label:"To cancel Baity 5G SIM",prompt:"Cancel SIM",color:"yellow"}
-                ]
-              }
-            ]
-          },
-          {
-            id:"another-number",
-            digit:"2",
-            label:"To serve another Mobile or Landline number",
-            prompt:"Continue for another number",
-            color:"yellow"
-          },
-          {
-            id:"qn-baity-service",
-            digit:"3",
-            label:"For Quick Net & Baity 5G service",
-            prompt:"Check service eligibility",
-            color:"green",
-            children:[
-              {
-                id:"decision-1",
-                label:"Customer has QN or Baity 5G?",
-                prompt:"Decision",
-                type:"decision",
-                yesLabel:"Yes",
-                noLabel:"No",
-                children:[
-                  {
-                    id:"yes-branch",
-                    label:"Yes",
-                    prompt:"Eligible",
-                    color:"blue",
-                    children:[
-                      {
-                        id:"yes-services",
-                        label:"Eligible service options",
-                        prompt:"Available services",
-                        color:"gray",
-                        children:[
-                          {label:"IF QN Postpaid",prompt:"QuickNet Postpaid branch",color:"blue",children:[
-                            {digit:"1",label:"To Manage your Quicknet package",color:"yellow"},
-                            {digit:"2",label:"For Quick Net Support",color:"yellow"},
-                            {digit:"3",label:"To stop the Quick Net temporarily",color:"yellow"},
-                            {digit:"4",label:"To cancel Quick Net SIM",color:"red"}
-                          ]},
-                          {label:"IF QN Prepaid",prompt:"QuickNet Prepaid branch",color:"blue",children:[
-                            {digit:"1",label:"To Manage your Quicknet package",color:"yellow"},
-                            {digit:"2",label:"For Quick Net Support",color:"yellow"},
-                            {digit:"3",label:"To stop the Quick Net temporarily",color:"yellow"},
-                            {digit:"4",label:"To cancel Quick Net SIM",color:"yellow"}
-                          ]},
-                          {label:"IF Baity 5G",prompt:"Baity 5G branch",color:"blue",children:[
-                            {digit:"1",label:"To Manage your Baity 5G package",color:"yellow"},
-                            {digit:"2",label:"For Baity 5G Support",color:"yellow"},
-                            {digit:"3",label:"To stop Baity 5G temporarily",color:"yellow"},
-                            {digit:"4",label:"To cancel Baity 5G SIM",color:"yellow"}
-                          ]}
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    id:"no-branch",
-                    label:"No",
-                    prompt:"Not eligible",
-                    color:"blue",
-                    children:[
-                      {
-                        id:"no-note",
-                        label:"Dear Customer, You do not have any Quicknet or Baity 5G SIM for the same ID.",
-                        type:"note",
-                        color:"gray"
-                      },
-                      {
-                        id:"no-options",
-                        label:"Available purchase options",
-                        prompt:"Get new SIM",
-                        color:"gray",
-                        children:[
-                          {digit:"1",label:"To get Quick net SIM",color:"yellow"},
-                          {digit:"2",label:"To get Baity 5G SIM",color:"yellow"}
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+        type: 'custom',
+        nodes: [
+          { id:'root', kind:'box', x:280, y:10, w:220, color:'green', digit:'2', label:'To manage your numbers', prompt:'Customer selects service' },
+          { id:'same', kind:'box', x:760, y:130, w:220, color:'yellow', digit:'1', label:'To Serve you on the same number', prompt:'Continue on same number' },
+          { id:'another', kind:'box', x:1010, y:130, w:220, color:'yellow', digit:'2', label:'To serve another Mobile or Landline number', prompt:'Continue on another number' },
+          { id:'service', kind:'box', x:1260, y:130, w:220, color:'green', digit:'3', label:'For Quick Net & Baity 5G service', prompt:'Check eligibility' },
+
+          { id:'postpaid', kind:'box', x:40, y:385, w:220, color:'blue', label:'IF QN Postpaid', prompt:'QuickNet Postpaid branch' },
+          { id:'postpaid1', kind:'box', x:40, y:447, w:220, color:'yellow', digit:'1', label:'To Manage your Quicknet package', prompt:'Manage package' },
+          { id:'postpaid2', kind:'box', x:40, y:509, w:220, color:'yellow', digit:'2', label:'For Quick Net Support', prompt:'Support' },
+          { id:'postpaid3', kind:'box', x:40, y:571, w:220, color:'yellow', digit:'3', label:'To stop the Quick Net temporarily', prompt:'Temporary stop' },
+          { id:'postpaid4', kind:'box', x:40, y:633, w:220, color:'red', digit:'4', label:'To cancel Quick Net SIM', prompt:'Cancel SIM' },
+
+          { id:'prepaid', kind:'box', x:500, y:385, w:220, color:'blue', label:'IF QN Prepaid', prompt:'QuickNet Prepaid branch' },
+          { id:'prepaid1', kind:'box', x:500, y:447, w:220, color:'yellow', digit:'1', label:'To Manage your Quicknet package', prompt:'Manage package' },
+          { id:'prepaid2', kind:'box', x:500, y:509, w:220, color:'yellow', digit:'2', label:'For Quick Net Support', prompt:'Support' },
+          { id:'prepaid3', kind:'box', x:500, y:571, w:220, color:'yellow', digit:'3', label:'To stop the Quick Net temporarily', prompt:'Temporary stop' },
+          { id:'prepaid4', kind:'box', x:500, y:633, w:220, color:'yellow', digit:'4', label:'To cancel Quick Net SIM', prompt:'Cancel SIM' },
+
+          { id:'baity', kind:'box', x:900, y:385, w:220, color:'blue', label:'IF Baity 5G', prompt:'Baity 5G branch' },
+          { id:'baity1', kind:'box', x:900, y:447, w:220, color:'yellow', digit:'1', label:'To Manage your Baity 5G package', prompt:'Manage package' },
+          { id:'baity2', kind:'box', x:900, y:509, w:220, color:'yellow', digit:'2', label:'For Baity 5G Support', prompt:'Support' },
+          { id:'baity3', kind:'box', x:900, y:571, w:220, color:'yellow', digit:'3', label:'To stop Baity 5G temporarily', prompt:'Temporary stop' },
+          { id:'baity4', kind:'box', x:900, y:633, w:220, color:'yellow', digit:'4', label:'To cancel Baity 5G SIM', prompt:'Cancel SIM' },
+
+          { id:'decision', kind:'decision', x:1225, y:300, label:'Customer has QN or Baity 5G?' },
+          { id:'yesLabel', kind:'label', x:1175, y:350, label:'Yes' },
+          { id:'noLabel', kind:'label', x:1397, y:350, label:'No' },
+
+          { id:'note', kind:'box', x:1355, y:430, w:220, color:'gray', label:'Dear Customer, You do not have any Quicknet or Baity 5G SIM for the same ID.', prompt:'No eligible SIM' },
+          { id:'buy1', kind:'box', x:1420, y:620, w:220, color:'yellow', digit:'1', label:'To get Quick net SIM', prompt:'Purchase option' },
+          { id:'buy2', kind:'box', x:1420, y:682, w:220, color:'yellow', digit:'2', label:'To get Baity 5G SIM', prompt:'Purchase option' }
+        ],
+        connectors: [
+          { x:390, y:62, w:0, h:55 },
+          { x:390, y:117, w:980, h:0 },
+          { x:870, y:117, w:0, h:13 },
+          { x:1120, y:117, w:0, h:13 },
+          { x:1370, y:117, w:0, h:13 },
+
+          { x:870, y:182, w:0, h:150 },
+          { x:150, y:332, w:720, h:0 },
+          { x:150, y:332, w:0, h:53 },
+          { x:610, y:332, w:0, h:53 },
+          { x:1010, y:332, w:0, h:53 },
+          { x:870, y:332, w:355, h:0 },
+          { x:1225, y:332, w:0, h:33 },
+
+          { x:1370, y:182, w:0, h:118 },
+          { x:1370, y:300, w:-80, h:0 },
+          { x:1290, y:300, w:0, h:85 },
+
+          { x:1290, y:430, w:0, h:186 },
+          { x:1290, y:616, w:130, h:0 },
+          { x:1420, y:616, w:0, h:14 },
+          { x:1290, y:678, w:130, h:0 },
+          { x:1420, y:678, w:0, h:14 }
         ]
       }
     }
   },
   "non-stc": {
     services: {
-      "No flow yet": {
-        id: "non-stc-placeholder",
-        label: "non-stc",
-        prompt: "Flow will be added later.",
-        color: "gray",
-        children: []
-      }
+      "No flow yet": { type:'single', x: 40, y: 40, w: 220, color:'gray', label:'non-stc', prompt:'Flow will be added later.' }
     }
   }
 };
 
-const networks = ["stc", "non-stc"];
-let selectedNetwork = "stc";
-let selectedService = "To manage your numbers";
+const networks = ['stc','non-stc'];
+let selectedNetwork = 'stc';
+let selectedService = 'To manage your numbers';
 let selectedId = null;
-let nodeMap = new Map();
 let currentFlow = null;
+let nodeMap = new Map();
 
-function withIds(node, path = 'n', digits = []) {
-  const clone = { ...node };
-  if (!clone.id) clone.id = path;
-  clone.dtmfPath = [...digits, clone.digit].filter(Boolean).join(' → ');
-  if (clone.children) {
-    clone.children = clone.children.map((child, idx) => withIds(child, `${clone.id}-${idx+1}`, [...digits, clone.digit].filter(Boolean)));
-  }
-  return clone;
-}
-
-function getCurrentFlow() {
-  const services = flows[selectedNetwork].services;
-  const firstKey = Object.keys(services)[0];
-  if (!services[selectedService]) selectedService = firstKey;
-  return withIds(services[selectedService]);
-}
-
-function rebuildNodeMap(node, path = []) {
-  const currentPath = [...path, node.label];
-  nodeMap.set(node.id, { ...node, path: currentPath.join(' → ') });
-  (node.children || []).forEach(child => rebuildNodeMap(child, currentPath));
-}
-
-function renderMenus() {
+function renderMenus(){
   const net = document.getElementById('networkMenu');
   const svc = document.getElementById('serviceMenu');
   net.innerHTML = "<div class='menu-title'>Network</div>";
-  networks.forEach(n => {
-    const b = document.createElement('button');
-    b.className = 'menu-item' + (n === selectedNetwork ? ' active' : '');
-    b.textContent = n;
-    b.onclick = () => {
-      selectedNetwork = n;
-      selectedService = Object.keys(flows[selectedNetwork].services)[0];
-      loadFlow();
-    };
+  networks.forEach(n=>{
+    const b=document.createElement('button');
+    b.className='menu-item'+(n===selectedNetwork?' active':'');
+    b.textContent=n;
+    b.onclick=()=>{selectedNetwork=n; selectedService=Object.keys(flows[selectedNetwork].services)[0]; loadFlow();};
     net.appendChild(b);
   });
-
   svc.innerHTML = "<div class='menu-title'>Service</div>";
-  Object.keys(flows[selectedNetwork].services).forEach(s => {
-    const b = document.createElement('button');
-    b.className = 'menu-item' + (s === selectedService ? ' active' : '');
-    b.textContent = s;
-    b.onclick = () => {
-      selectedService = s;
-      loadFlow();
-    };
+  Object.keys(flows[selectedNetwork].services).forEach(s=>{
+    const b=document.createElement('button');
+    b.className='menu-item'+(s===selectedService?' active':'');
+    b.textContent=s;
+    b.onclick=()=>{selectedService=s; loadFlow();};
     svc.appendChild(b);
   });
 }
 
-function createStandardNode(node) {
-  const card = document.createElement('div');
-  card.className = `node ${node.color || 'gray'} ${node.small ? 'small' : ''}`;
-  card.dataset.id = node.id;
-  card.innerHTML = `
-    <div class="node-head">
-      <div class="corner"><span>${node.digit || ''}</span></div>
-      <div class="body">${node.label || ''}</div>
-    </div>`;
-  card.onclick = (e) => {
-    e.stopPropagation();
-    selectedId = node.id;
-    highlight();
-    renderDetails();
-  };
-  return card;
+function boxHtml(node){
+  const div=document.createElement('div');
+  div.className=`box ${node.color||'gray'}`;
+  if(node.kind==='label') return div;
+  div.style.left=node.x+'px';
+  div.style.top=node.y+'px';
+  div.style.width=(node.w||220)+'px';
+  div.dataset.id=node.id;
+  div.innerHTML=`<div class="row"><div class="corner"><span>${node.digit||''}</span></div><div class="body">${node.label||''}</div></div>`;
+  div.onclick=(e)=>{e.stopPropagation(); selectedId=node.id; highlight(); renderDetails();};
+  return div;
 }
 
-function createDecisionNode(node) {
-  const wrap = document.createElement('div');
-  wrap.className = 'node decision';
-  wrap.dataset.id = node.id;
-  wrap.innerHTML = `<div class="diamond"><div class="diamond-text">${node.label}</div></div>`;
-  wrap.onclick = (e) => {
-    e.stopPropagation();
-    selectedId = node.id;
-    highlight();
-    renderDetails();
-  };
-  return wrap;
+function decisionHtml(node){
+  const div=document.createElement('div');
+  div.className='decision';
+  div.style.left=node.x+'px';
+  div.style.top=node.y+'px';
+  div.dataset.id=node.id;
+  div.innerHTML=`<div class="txt">${node.label}</div>`;
+  div.onclick=(e)=>{e.stopPropagation(); selectedId=node.id; highlight(); renderDetails();};
+  return div;
 }
 
-function createNoteNode(node) {
-  const card = document.createElement('div');
-  card.className = 'node note';
-  card.dataset.id = node.id;
-  card.innerHTML = `<div class="body">${node.label}</div>`;
-  card.onclick = (e) => {
-    e.stopPropagation();
-    selectedId = node.id;
-    highlight();
-    renderDetails();
-  };
-  return card;
+function labelHtml(node){
+  const div=document.createElement('div');
+  div.className='label';
+  div.style.left=node.x+'px';
+  div.style.top=node.y+'px';
+  div.textContent=node.label;
+  return div;
 }
 
-function buildTree(node) {
-  const li = document.createElement('li');
-  li.dataset.id = node.id;
-
-  let card;
-  if (node.type === 'decision') card = createDecisionNode(node);
-  else if (node.type === 'note') card = createNoteNode(node);
-  else card = createStandardNode(node);
-
-  li.appendChild(card);
-
-  if (node.children && node.children.length) {
-    const ul = document.createElement('ul');
-    node.children.forEach(c => ul.appendChild(buildTree(c)));
-    li.appendChild(ul);
+function connectorHtml(c){
+  const div=document.createElement('div');
+  const isH = c.h===0;
+  div.className='connector '+(isH?'h-line':'v-line');
+  if(isH){
+    div.style.left=(c.w>=0?c.x:c.x+c.w)+'px';
+    div.style.top=c.y+'px';
+    div.style.width=Math.abs(c.w)+'px';
+  } else {
+    div.style.left=c.x+'px';
+    div.style.top=(c.h>=0?c.y:c.y+c.h)+'px';
+    div.style.height=Math.abs(c.h)+'px';
   }
-
-  return li;
+  return div;
 }
 
-function renderTree() {
-  const root = document.getElementById('treeRoot');
-  root.innerHTML = '';
-  const ul = document.createElement('ul');
-  ul.appendChild(buildTree(currentFlow));
-  root.appendChild(ul);
+function rebuildNodeMap(){
+  nodeMap = new Map();
+  if(currentFlow.type==='single'){
+    const id='single';
+    nodeMap.set(id,{id,label:currentFlow.label,prompt:currentFlow.prompt,path:currentFlow.label,dtmfPath:currentFlow.digit||'-'});
+    selectedId=id;
+    return;
+  }
+  currentFlow.nodes.forEach(n=>{
+    nodeMap.set(n.id,{...n,path:n.label,dtmfPath:n.digit||'-'});
+  });
+  selectedId=currentFlow.nodes[0].id;
+}
+
+function renderCanvas(){
+  const canvas=document.getElementById('canvas');
+  canvas.innerHTML='';
+  if(currentFlow.type==='single'){
+    const n={...currentFlow,id:'single',kind:'box'};
+    canvas.style.minHeight='220px';
+    canvas.style.minWidth='500px';
+    canvas.appendChild(boxHtml(n));
+    return;
+  }
+  canvas.style.minHeight='760px';
+  canvas.style.minWidth='1660px';
+  currentFlow.connectors.forEach(c=>canvas.appendChild(connectorHtml(c)));
+  currentFlow.nodes.forEach(n=>{
+    let el;
+    if(n.kind==='decision') el=decisionHtml(n);
+    else if(n.kind==='label') el=labelHtml(n);
+    else el=boxHtml(n);
+    canvas.appendChild(el);
+  });
   highlight();
   applySearch();
 }
 
-function highlight() {
-  document.querySelectorAll('.node').forEach(n => n.classList.toggle('active', n.dataset.id === selectedId));
+function highlight(){
+  document.querySelectorAll('.box,.decision').forEach(el=>{
+    el.classList.toggle('active', el.dataset.id===selectedId);
+  });
 }
 
-function renderDetails() {
-  const node = nodeMap.get(selectedId);
-  const panel = document.getElementById('detailsPanel');
-  if (!node) return;
-  panel.innerHTML = `
-    <div class='field'>
-      <div class='name'>Network</div>
-      <div class='content'>${selectedNetwork}</div>
-    </div>
-    <div class='field'>
-      <div class='name'>Service</div>
-      <div class='content'>${selectedService}</div>
-    </div>
-    <div class='field'>
-      <div class='name'>Node</div>
-      <div class='content'>${node.label}</div>
-    </div>
-    <div class='field'>
-      <div class='name'>Prompt</div>
-      <div class='content'>${node.prompt || '-'}</div>
-    </div>
-    <div class='field'>
-      <div class='name'>DTMF Path</div>
-      <div class='content'>${node.dtmfPath || '-'}</div>
-    </div>
-    <div class='field'>
-      <div class='name'>Path</div>
-      <div class='content'>${node.path || '-'}</div>
-    </div>
-    <div class='field'>
-      <div class='name'>Notes</div>
-      <div class='content hint'>Current flow is based on the draft image. Add the remaining branches later in the same JSON structure.</div>
-    </div>`;
+function renderDetails(){
+  const node=nodeMap.get(selectedId);
+  const panel=document.getElementById('detailsPanel');
+  if(!node) return;
+  panel.innerHTML=`
+    <div class="field"><div class="name">Network</div><div class="content">${selectedNetwork}</div></div>
+    <div class="field"><div class="name">Service</div><div class="content">${selectedService}</div></div>
+    <div class="field"><div class="name">Node</div><div class="content">${node.label||'-'}</div></div>
+    <div class="field"><div class="name">Prompt</div><div class="content">${node.prompt||'-'}</div></div>
+    <div class="field"><div class="name">DTMF</div><div class="content">${node.dtmfPath||'-'}</div></div>
+    <div class="field"><div class="name">Notes</div><div class="content hint">This version is laid out manually to keep the diagram clean and close to your reference image.</div></div>`;
 }
 
-function loadFlow() {
-  currentFlow = getCurrentFlow();
-  nodeMap = new Map();
-  rebuildNodeMap(currentFlow);
-  selectedId = currentFlow.id;
+function loadFlow(){
+  currentFlow = flows[selectedNetwork].services[selectedService];
   renderMenus();
-  renderTree();
+  rebuildNodeMap();
+  renderCanvas();
   renderDetails();
 }
 
-function applySearch() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const items = document.querySelectorAll('#treeRoot li');
-  if (!q) {
-    items.forEach(i => i.classList.remove('hidden'));
+function applySearch(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const canvas=document.getElementById('canvas');
+  if(currentFlow.type==='single'){
+    const el=canvas.querySelector('.box');
+    if(!el) return;
+    el.classList.toggle('hidden', q && !(currentFlow.label+' '+(currentFlow.prompt||'')).toLowerCase().includes(q));
     return;
   }
-
-  function subtreeMatches(node) {
-    const text = [node.label, node.prompt, node.dtmfPath].filter(Boolean).join(' ').toLowerCase();
-    if (text.includes(q)) return true;
-    return (node.children || []).some(subtreeMatches);
-  }
-
-  nodeMap.forEach((node, id) => {
-    const li = document.querySelector(`#treeRoot li[data-id="${id}"]`);
-    if (!li) return;
-    li.classList.toggle('hidden', !subtreeMatches(node));
+  currentFlow.nodes.forEach(n=>{
+    const el=canvas.querySelector(`[data-id="${n.id}"]`);
+    if(!el || n.kind==='label') return;
+    const txt=(n.label+' '+(n.prompt||'')+' '+(n.digit||'')).toLowerCase();
+    el.classList.toggle('hidden', q && !txt.includes(q));
   });
 }
 
