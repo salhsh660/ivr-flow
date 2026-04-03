@@ -3,44 +3,36 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>IVR Flow Diagram</title>
+<title>IVR Flow</title>
 <style>
 :root{
---bg:#f5f7fb;
+--bg:#f4f6fb;
 --card:#ffffff;
 --text:#1f2937;
---muted:#6b7280;
---line:#d6deea;
---accent:#0f172a;
---accent2:#2563eb;
---shadow:0 10px 30px rgba(15,23,42,.08);
+--line:#d5deea;
+--shadow:0 10px 25px rgba(0,0,0,.08);
 }
-
-*{box-sizing:border-box}
 
 body{
 margin:0;
 font-family:Arial,Helvetica,sans-serif;
 background:var(--bg);
-color:var(--text);
 }
 
 .page{
-max-width:1500px;
+max-width:1600px;
 margin:auto;
 padding:20px;
 }
 
 .header{
-background:var(--card);
-border-radius:18px;
+background:white;
 padding:16px 20px;
+border-radius:16px;
 box-shadow:var(--shadow);
-border:1px solid #e5e7eb;
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:20px;
 margin-bottom:16px;
 }
 
@@ -49,74 +41,58 @@ margin:0;
 font-size:26px;
 }
 
-.search{
-flex:1;
-display:flex;
-justify-content:flex-end;
-}
-
-.search input{
-width:320px;
-padding:10px 12px;
-border-radius:10px;
-border:1px solid #d1d5db;
-}
-
-.segment-bar{
-background:var(--card);
-border-radius:16px;
-padding:14px;
-border:1px solid #e5e7eb;
+.menu-bar{
+background:white;
+border-radius:14px;
+padding:12px;
 box-shadow:var(--shadow);
 display:flex;
-flex-wrap:wrap;
+flex-direction:column;
 gap:10px;
-margin-bottom:16px;
+margin-bottom:18px;
 }
 
-.segment-group{
+.menu-group{
 display:flex;
 flex-wrap:wrap;
 gap:8px;
 }
 
-.segment-title{
+.menu-title{
 width:100%;
 font-size:12px;
 text-transform:uppercase;
-letter-spacing:.06em;
-color:var(--muted);
-margin-bottom:4px;
+letter-spacing:.05em;
+color:#6b7280;
+margin-bottom:2px;
 }
 
-.segment-item{
+.menu-item{
 border:1px solid #e5e7eb;
-background:white;
+padding:6px 14px;
 border-radius:999px;
-padding:6px 12px;
+background:#fff;
 font-size:13px;
 cursor:pointer;
 }
 
-.segment-item.active{
-background:#eff6ff;
-border-color:#93c5fd;
-color:#1d4ed8;
-font-weight:bold;
+.menu-item.active{
+background:#2563eb;
+color:white;
+border-color:#2563eb;
 }
 
 .layout{
 display:grid;
-grid-template-columns:1fr 340px;
-gap:18px;
+grid-template-columns:1fr 320px;
+gap:20px;
 }
 
 .diagram-wrap{
-background:var(--card);
-border-radius:18px;
-border:1px solid #e5e7eb;
+background:white;
+border-radius:16px;
+padding:12px;
 box-shadow:var(--shadow);
-padding:10px;
 }
 
 .diagram{
@@ -127,7 +103,7 @@ padding:10px;
 .tree{
 transform:scale(.75);
 transform-origin:top center;
-min-width:900px;
+min-width:1100px;
 display:flex;
 justify-content:center;
 }
@@ -173,22 +149,13 @@ height:20px;
 }
 
 .node{
-width:170px;
-background:white;
-border:1px solid #dbe3f0;
-border-radius:14px;
+width:190px;
 padding:10px;
+border-radius:10px;
+background:#fff;
+border:1px solid #e4e9f2;
+box-shadow:0 6px 12px rgba(0,0,0,.05);
 text-align:left;
-box-shadow:0 6px 16px rgba(15,23,42,.05);
-cursor:pointer;
-}
-
-.node:hover{
-box-shadow:0 10px 18px rgba(15,23,42,.08);
-}
-
-.node.active{
-border-color:var(--accent2);
 }
 
 .node h3{
@@ -199,43 +166,41 @@ font-size:13px;
 .node p{
 margin:0;
 font-size:11px;
-color:var(--muted);
+color:#6b7280;
 }
 
 .badge{
-background:#eff6ff;
-color:#2563eb;
-padding:2px 6px;
-border-radius:999px;
+background:#1e3a8a;
+color:white;
 font-size:10px;
+padding:2px 6px;
+border-radius:6px;
 margin-right:4px;
 }
 
+.node.yellow{background:#fde68a}
+.node.green{background:#bbf7d0}
+.node.blue{background:#c7d2fe}
+.node.red{background:#fecaca}
+
 .details{
-background:var(--card);
-border-radius:18px;
-border:1px solid #e5e7eb;
-box-shadow:var(--shadow);
+background:white;
+border-radius:16px;
 padding:16px;
-position:sticky;
-top:20px;
+box-shadow:var(--shadow);
 }
 
 .field{
 margin-bottom:12px;
-border-bottom:1px solid #eef2f7;
-padding-bottom:10px;
-}
-
-.field:last-child{
-border-bottom:none;
+border-bottom:1px solid #eee;
+padding-bottom:8px;
 }
 
 .name{
 font-size:11px;
+color:#6b7280;
 text-transform:uppercase;
-color:var(--muted);
-margin-bottom:4px;
+margin-bottom:3px;
 }
 
 .content{
@@ -244,7 +209,6 @@ font-size:14px;
 
 @media(max-width:1000px){
 .layout{grid-template-columns:1fr}
-.details{position:static}
 }
 </style>
 </head>
@@ -254,14 +218,14 @@ font-size:14px;
 
 <div class="header">
 <h1>IVR Flow</h1>
-<div class="search">
-<input id="searchInput" placeholder="Search...">
-</div>
 </div>
 
-<div class="segment-bar">
-<div class="segment-group" id="customerTypeList"></div>
-<div class="segment-group" id="customerStatusList"></div>
+<div class="menu-bar">
+
+<div class="menu-group" id="networkMenu"></div>
+
+<div class="menu-group" id="serviceMenu"></div>
+
 </div>
 
 <div class="layout">
@@ -279,114 +243,93 @@ font-size:14px;
 </div>
 
 <script>
-const customerTypes=["VIP customers","Old customers","New customers","High customers"];
-const customerStatuses=["Active","Suspended","Dunning 1","Dunning 2","Black listed"];
 
-let selectedType=customerTypes[0];
-let selectedStatus=customerStatuses[0];
+const networks=["stc","non-stc"];
+let selectedNetwork="stc";
+
+const stcMenu=[
+"To request a new package or devices",
+"To manage your numbers"
+];
+
+let selectedService=stcMenu[0];
 
 const ivrData={
 id:"root",
-label:"Entry",
-prompt:"Customer enters IVR",
+label:"To manage your numbers",
+prompt:"Customer selects service",
 type:"menu",
+color:"green",
 children:[
 {
-id:"verify",
+id:"same-number",
 digit:"1",
-label:"Verification",
-prompt:"Verify customer",
-type:"menu",
-children:[
-{id:"otp",digit:"1",label:"OTP",prompt:"Send OTP",type:"route",target:"Auth service"},
-{id:"pin",digit:"2",label:"PIN",prompt:"Validate PIN",type:"route",target:"Auth API"}
-]
+label:"To serve you on the same number",
+prompt:"Serve same number",
+color:"yellow"
 },
 {
-id:"billing",
+id:"another-number",
 digit:"2",
-label:"Billing",
-prompt:"Billing options",
-type:"menu",
-children:[
-{id:"balance",digit:"1",label:"Balance",prompt:"Check balance",type:"route",target:"Billing system"},
-{id:"pay",digit:"2",label:"Pay bill",prompt:"Payment gateway",type:"route",target:"Payment gateway"}
-]
+label:"To serve another Mobile or Landline number",
+prompt:"Serve another number",
+color:"yellow"
 },
 {
-id:"support",
+id:"bait-5g",
 digit:"3",
-label:"Technical Support",
-prompt:"Technical help",
-type:"route",
-target:"Support queue"
-},
-{
-id:"agent",
-digit:"0",
-label:"Agent",
-prompt:"Transfer to agent",
-type:"route",
-target:"Call center"
+label:"For Quick Net & Baity 5G service",
+prompt:"Check eligibility",
+color:"green"
 }
 ]
 };
 
 const nodeMap=new Map();
-let selectedId=ivrData.id;
+let selectedId="root";
 
 function flatten(node,path=[]){
 const current=[...path,node.label];
 nodeMap.set(node.id,{...node,path:current.join(" → ")});
-let arr=[node];
-if(node.children)node.children.forEach(c=>arr=arr.concat(flatten(c,current)));
-return arr;
+if(node.children)node.children.forEach(c=>flatten(c,current));
 }
 flatten(ivrData);
 
-function renderSegments(){
-const typeWrap=document.getElementById("customerTypeList");
-const statusWrap=document.getElementById("customerStatusList");
+function renderMenus(){
+const net=document.getElementById("networkMenu");
+const svc=document.getElementById("serviceMenu");
 
-const typeTitle=document.createElement("div");
-typeTitle.className="segment-title";
-typeTitle.textContent="Customer type";
+net.innerHTML="<div class='menu-title'>Network</div>";
 
-const statusTitle=document.createElement("div");
-statusTitle.className="segment-title";
-statusTitle.textContent="Account status";
-
-typeWrap.innerHTML="";
-statusWrap.innerHTML="";
-
-typeWrap.appendChild(typeTitle);
-statusWrap.appendChild(statusTitle);
-
-customerTypes.forEach(t=>{
+networks.forEach(n=>{
 const b=document.createElement("button");
-b.className="segment-item"+(t===selectedType?" active":"");
-b.textContent=t;
-b.onclick=()=>{selectedType=t;renderSegments();renderDetails();};
-typeWrap.appendChild(b);
+b.className="menu-item"+(n===selectedNetwork?" active":"");
+b.textContent=n;
+b.onclick=()=>{selectedNetwork=n;renderMenus();};
+net.appendChild(b);
 });
 
-customerStatuses.forEach(s=>{
+svc.innerHTML="<div class='menu-title'>Service</div>";
+
+if(selectedNetwork==="stc"){
+stcMenu.forEach(s=>{
 const b=document.createElement("button");
-b.className="segment-item"+(s===selectedStatus?" active":"");
+b.className="menu-item"+(s===selectedService?" active":"");
 b.textContent=s;
-b.onclick=()=>{selectedStatus=s;renderSegments();renderDetails();};
-statusWrap.appendChild(b);
+b.onclick=()=>{selectedService=s;renderMenus();};
+svc.appendChild(b);
 });
+}
 }
 
 function buildTree(node){
 const li=document.createElement("li");
 
 const card=document.createElement("div");
-card.className="node";
-card.onclick=()=>{selectedId=node.id;renderDetails();highlight();};
+card.className="node "+(node.color||"");
+card.onclick=()=>{selectedId=node.id;renderDetails();};
 
-card.innerHTML=`<h3><span class="badge">${node.digit||""}</span>${node.label}</h3><p>${node.prompt||""}</p>`;
+card.innerHTML=`<h3><span class='badge'>${node.digit||""}</span>${node.label}</h3><p>${node.prompt||""}</p>`;
 
 li.appendChild(card);
 
@@ -407,44 +350,43 @@ ul.appendChild(buildTree(ivrData));
 root.appendChild(ul);
 }
 
-function highlight(){
-document.querySelectorAll(".node").forEach(n=>n.classList.remove("active"));
-}
-
 function renderDetails(){
 const node=nodeMap.get(selectedId);
+
 const panel=document.getElementById("detailsPanel");
 
 panel.innerHTML=`
-<div class="field">
-<div class="name">Segment</div>
-<div class="content">${selectedType} · ${selectedStatus}</div>
+<div class='field'>
+<div class='name'>Network</div>
+<div class='content'>${selectedNetwork}</div>
 </div>
 
-<div class="field">
-<div class="name">Node</div>
-<div class="content">${node.label}</div>
+<div class='field'>
+<div class='name'>Service</div>
+<div class='content'>${selectedService}</div>
 </div>
 
-<div class="field">
-<div class="name">Prompt</div>
-<div class="content">${node.prompt||"-"}</div>
+<div class='field'>
+<div class='name'>Node</div>
+<div class='content'>${node.label}</div>
 </div>
 
-<div class="field">
-<div class="name">Target</div>
-<div class="content">${node.target||"-"}</div>
+<div class='field'>
+<div class='name'>Prompt</div>
+<div class='content'>${node.prompt||"-"}</div>
 </div>
 
-<div class="field">
-<div class="name">Path</div>
-<div class="content">${node.path}</div>
-</div>`;
+<div class='field'>
+<div class='name'>Path</div>
+<div class='content'>${node.path}</div>
+</div>
+`;
 }
 
-renderSegments();
+renderMenus();
 renderTree();
 renderDetails();
+
 </script>
 
 </body>
